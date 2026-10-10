@@ -1,0 +1,347 @@
+﻿RandomAttackTest:
+  Name: "Random Attack Test"
+  Description: "Deal {RandomMinDamage}~{RandomMaxDamage} damage."
+  FlavorText: "A developer card for testing RNG mechanics."
+
+RandomBlockTest:
+  Name: "Random Block Test"
+  Description: "Gain {RandomMinBlock}~{RandomMaxBlock} |Block|."
+  FlavorText: "A developer card for testing RNG mechanics."
+
+RandomShieldTest:
+  Name: "Random Shield Test"
+  Description: "Gain {RandomMinShield}~{RandomMaxShield} |Barrier|."
+  FlavorText: "A developer card for testing RNG mechanics."
+
+ChaosStatusTest:
+  Name: "Chaos Test"
+  Description: "Gain {Value1} |Chaos|."
+  FlavorText: "A developer card for testing RNG mechanics."
+
+LuckStatusTest:
+  Name: "Luck Test"
+  Description: "Gain {Value1} |Luck|."
+  FlavorText: "A developer card for testing RNG mechanics."
+
+RandomDrawTest:
+  Name: "Random Draw Test"
+  Description: "Draw {RandomMinValue1}~{RandomMaxValue1} cards."
+  FlavorText: "A developer card for testing RNG mechanics."
+
+LuckNegativeStatusTest:
+  Name: "Lose Luck Test"
+  Description: "Lose {Value1} |Luck|."
+  FlavorText: "A developer card for testing RNG mechanics."
+
+StrangeDiceBag:
+  Name: "Strange Dice Bag"
+  Description: "Choose {Value1} of {Value2} |Dice Card{Value2:plural one='' other='s'}| to add to the hand. {Value1:plural one='It is' other='They are'} treated as a copy and {Value1:plural one='has' other='have'} Limited【1】."
+  FlavorTest: "A dice bag stolen from Seija's items. It has a strange aura as if it was from another world."
+
+D8:
+  Name: "The D8"
+  Description: |-
+    Randomly gain {RandomMinValue1}~{RandomMaxValue1} |Firepower|.
+    Randomly gain {RandomMinValue2}~{RandomMaxValue2} |Spirit|.
+    Limited【{DeckCounter}】
+  FlavorText: "A guest from The Binding of Isaac! 2.3 damage. 1.2 tears. How nice."
+
+D20:
+  Name: "The D20"
+  Description: |-
+    |Exile| the hand.
+    Add {Value1} random card{Value1:plural one='' other='s'} to the hand for each card |Exiled| this way.
+    Each card{Value1:plural one=' has' other='s have'} a {PercentValue1}|n:%| chance to be upgraded.
+    Limited【{DeckCounter}】
+  FlavorText: "A guest from The Binding of Isaac! The die acts nothing like it does from the game. Shh..."
+
+D100:
+  Name: "The D100"
+  Description: |-
+    Trigger one of the following effects: 
+    1) Play {Value1} |p:completely random| Rare card{Value1:plural one='' other='s'}.
+    2) Play {Value2} random |Dice Card{Value2:plural one='' other='s'}|.
+    3) Gain {Value3} |Firepower|.
+    4) Gain {Value4} |Spirit|.
+    5) Gain {Value5} life.
+    6) Gain {Value6} |Luck|.
+    7) Gain {Value7} |Temporary Luck|.
+    8) Gain {Value8} |Chaos|.
+    9) Gain {Value9} |Temporary Chaos|.
+    Limited【{DeckCounter}】
+
+D6:
+  Name: "The D6"
+  Description: |-
+    Remove {Value1} non-shining exhibit{Value1:plural one='' other='s'} and gain {Value2} random non-shining exhibit{Value2:plural one='' other='s'}.
+    Limited【{DeckCounter}】
+  FlavorText: "A guest from The Binding of Isaac! The most overpowered starting item."
+
+FragmentedGrimoire:
+  Name: "Fragmented Grimoire"
+  Description: |-
+    Lose {RandomMinValue1}~{RandomMaxValue1} life.
+    At the start of {PlayerName}'s turn, choose {Value1} of {Value2} |p:completely random| card{Value2:plural one='' other='s'} to add to the hand. {Value1:plural one='It' other='They'} temporarily cost{Value1:plural one='s' other=''} {Mana} and {Value1:plural one='has' other='have'} |Exile| and |Ethereal|.
+    The choice only displays the mana cost and color of the card{Value2:plural one='' other='s'}.
+  UpgradedDescription: |-
+    Lose {RandomMinValue1}~{RandomMaxValue1} life.
+    At the start of {PlayerName}'s turn, choose {Value1} of {Value2} |p:completely random| card{Value2:plural one='' other='s'} to add to the hand. {Value1:plural one='It' other='They'} temporarily cost{Value1:plural one='s' other=''} {Mana} and {Value1:plural one='has' other='have'} |Exile| and |Ethereal|.
+    The choice only displays the mana cost, color and rarity of the card{Value2:plural one='' other='s'}.
+  FlavorText: "A grimoire lost to time could contain anything. It could also be a cook book."
+
+UnknownCard:
+  Name: "Unknown Card"
+  Description: "This card's information is partly obscured."
+  FlavorText: "Tokiko ate the pages."
+
+AmanojakusGambit:
+  Name: "Amanojaku's Gambit"
+  Description: "Play {RandomMinValue1}~{RandomMaxValue1} |p:completely random| card{RandomMaxValue1:plural one='' other='s'}."
+  DetailText: "{SelfName} cannot generate |X Cost| or |Teammate| cards."
+  FlavorText: "Yogg-Saron is back guys!"
+
+PoisonNail:
+  Name: "Poison Nail"
+  Description: "Apply {RandomMinValue1}~{RandomMaxValue1} |Poison|."
+  FlavorText: "Never forget Yoshika..."
+
+BurstShot:
+  Name: "Burst Shot"
+  Description: "Deal {Damage} damage {RandomMinValue1}~{RandomMaxValue1} times."
+  FlavorText: "Lunatic Gun lite."
+
+UnstableBarrier:
+  Name: "Unstable Barrier"
+  Description: "Gain {RandomMinBlock}~{RandomMaxBlock} |Block|."
+  UpgradedDescription: |-
+    Gain {RandomMinBlock}~{RandomMaxBlock} |Block|.
+    {PercentValue1}|n:%| chance for half of the gained |Block| to be |Barrier| instead.
+  FlavorText: "'It's a work in progress!' -Marisa"
+
+ManaConverter:
+  Name: "Mana Converter"
+  Description: "Gain {RandomMinValue1}~{RandomMaxValue1} random mana."
+  UpgradedDescription: |-
+    Gain {RandomMinValue1}~{RandomMaxValue1} random mana.
+    Each mana has an increased {PercentValue1}|n:%| chance to be {Mana}.
+  FlavorText: "Placeholder text."
+
+WhiteRabbitLuck:
+  Name: "Luck of the White Rabbit"
+  Description: |-
+    Gain {Value1} |Luck|.
+    At the start of {PlayerName}'s turn, play a random card from the hand, draw pile, discard pile, or exile.
+  FlavorText: "New plan; Heart of the cards."
+
+StrangeElixir:
+  Name: "Strange Elixir"
+  Description: |-
+    Gain {Value1} |Luck|.
+    Gain {Value2} |Chaos!|.
+  FlavorText: "Placeholder text."
+
+OpticalCalibration:
+  Name: "Optical Calibration"
+  Description: |-
+    Deal {Damage} damage.
+    {PercentValue1}|n:%| chance to gain {Value1} |Optical Camouflage|.
+  FlavorText: "Placeholder text."
+
+PhantomicKiller:
+  Name: "Phantomic Killer"
+  Description: |-
+    Gain {Value1} |Chaos!|
+    {PercentValue1}|n:%| chance to deal {RandomMinValue1}~{RandomMaxValue1} attack damage to a random enemy when playing a card.
+  FlavorText: "Placeholder text."
+
+CelestialsBlessing:
+  Name: "Celestial's Blessing"
+  Description: |-
+    |Upgrade| all cards in the hand until the end of combat.
+    For each rare card in the library, gain {Value1} |Luck|.
+  FlavorText: "Tenshi sends her regards."
+
+BlackMarketKaleidoscope:
+  Name: "Black Market Kaleidoscope"
+  Description: |-
+    Choose {Value1} of {Value2} |p:completely random| rare cards, {Value1} of {Value3} |p:completely random| uncommon cards, or {Value1} of {Value4} |p:completely random| common cards to add to the hand.
+    {PercentValue1}|n:%| chance for a generated card to cost {Mana}.
+    {PercentValue2}|n:%| chance for a generated card to be |Upgraded|.
+  FlavorText: "Chimata mod leaked?"
+
+UncertainFuture:
+  Name: "Uncertain Future"
+  Description: "Draw {RandomMinValue1}~{RandomMaxValue1} cards."
+  FlavorText: "Placeholder text."
+
+AstrologicalDivination:
+  Name: "Astrological Divination"
+  Description: |-
+    Choose {Value1} of {Value2} |p:completely random| cards to be added to to the library.
+    Mana of any color can be spent to pay {Value1:plural one='its' other='their'} mana cost{Value1:plural one='' other='s'} for the rest of the run.
+    After {SelfName} is played, it is removed from combat and the library.
+    The card information is obscured and more information is revealed per excess {Mana} spent.
+  DetailText: |-
+    The order of information revealed:
+    <sprite="ManaSprite" name="0">: Card rarities are revealed.
+    <sprite="ManaSprite" name="1">: Card types are revealed.
+    <sprite="ManaSprite" name="2">: Card total costs are revealed.
+    <sprite="ManaSprite" name="3">: Card and mana colors are revealed.
+    <sprite="ManaSprite" name="4">: Cards are fully revealed.
+  FlavorText: "Placeholder text."
+
+SpacetimeSeam:
+  Name: "Spacetime Seam"
+  Description: |-
+    |At the start of combat|: |Exile| {SelfName}, then remove {Value1} card{Value1:plural one='' other='s'} from combat and store {Value1:plural one='it' other='them'}.
+    At the start of {PlayerName}'s turn, {PercentValue1}|n:%| chance to play a copy of the card{Value1:plural one='' other='s'}.
+    |Exile| {SelfName}.
+  UpgradedDescription: |-
+    |At the start of combat|: |Exile| {SelfName}, then remove {Value1} card{Value1:plural one='' other='s'} from combat and store {Value1:plural one='it' other='them'}.
+    {PercentValue2}|n:%| chance to |Upgrade| the card{Value1:plural one='' other='s'}.
+    At the start of {PlayerName}'s turn, {PercentValue1}|n:%| chance to play a copy of the card{Value1:plural one='' other='s'}.
+    |Exile| {SelfName}.
+  DetailText: "For the purposes of stacking this effect, each stored card has an independent chance to play a copy of itself."
+  FlavorText: "Placeholder text."
+  
+MeteonicShower:
+  Name:  "Meteonic Shower"
+  Description: |-
+    Deal {Damage} damage.
+    Add {RandomMinValue1}~{RandomMaxValue1} |Meteonic Debris| to the draw pile or discard pile.
+  FlavorText: "Placeholder text."
+
+MeteonicDebris:
+  Name: "Meteonic Debris"
+  Description: "|When {SelfName} enters the hand|: Deal {RandomMinDamage}~{RandomMaxDamage} attack damage to a random enemy and |Exile| {SelfName}."
+  FlavorText: "Placeholder text."
+
+InfluenceOfTheEast:
+  Name: "Influence of the East"
+  Description: "|At the start of combat|: |Exile| {SelfName} and gain {RandomMinValue1}~{RandomMaxValue1} |Reflection|."
+  UpgradedDescription: |-
+    |At the start of combat|: |Exile| {SelfName} and gain {RandomMinValue1}~{RandomMaxValue1} |Reflection|.
+    Gain {RandomMinShield}~{RandomMaxShield} |Barrier|.
+  FlavorText: "Placeholder text."
+
+NervePoison:
+  Name: "Nerve Poison"
+  Description: |-
+    |At the start of combat|: |Exile| {SelfName} and apply {RandomMinValue1}~{RandomMaxValue1} |Weak| to a random enemy.
+    {PercentValue1}|n:%| chance to double the outcome and apply |Weak| to all enemies instead.
+  FlavorText: "Placeholder text."
+
+LuckyClover:
+  Name: "Lucky Clover"
+  Description: "|At the start of combat|: |Exile| {SelfName} and gain {Value1} |Temporary Luck|."
+  FlavorText: "Placeholder text."
+
+RecursiveShot:
+  Name: "Recursive Shot"
+  Description: |-
+    |When {SelfName} enters the hand|: Deal {RandomMinDamage}~{RandomMaxDamage} attack damage to a random enemy.
+    {PercentValue1}|n:%| chance to gain {Value1} |Temporary Firepower|.
+    {PercentValue2}|n:%| chance to shuffle {SelfName} into the draw pile.
+    After {Value2} activations, {SelfName} is removed from combat. ({Counter} left)
+  FlavorText: "Placeholder text."
+
+SeijaFriend:
+  Name: "Seija, Counterattacking Amanojaku"
+  Description: "{FriendP} Deal {RandomMinDamage}~{RandomMaxDamage} attack damage to all enemies. Whenever a card is played, add it's mana cost to the range's maximum outcome until the start of the next turn."
+  ExtraDescription1: |-
+    {FriendU} For the rest of this combat, all cards entering the hand will be removed from combat and {Value2} |p:completely random| card{Value2:plural one='' other='s'} will be added to the hand in their place. Mana of any color can be spent to pay {Value2:plural one='its' other='their'} mana cost{Value2:plural one='' other='s'}.
+    {PercentValue1}|n:%| chance {Value2:plural one='the card is' other='for each card to be'} |Upgraded|.
+  FlavorText: "Your blessings are my ↑CURSE↑! My curses are your ↓GIFT↓!"
+
+YamaDecree:
+  Name: "Yama's Decree"
+  Description: |-
+    Gain {Value1} |Order|.
+    Choose: Gain {Value2} |Firepower| or gain {Value3} |Spirit|.
+  ExtraDescription1: "Gain {Value2} |Firepower|."
+  ExtraDescription2: "Gain {Value3} |Spirit|."
+  FlavorText: "Placeholder text."
+
+HonorDefianceAvoidance:
+  Name: "Honor the Avoidance of Defiance"
+  Description: |-
+    Gain {Value1} |Order| at the start of {PlayerName}'s turn.
+    If there are no stacks of |Chaos| at the end of combat, gain {Value2} life.
+  FlavorText: "Placeholder text."
+
+PovertyGodsWrath:
+  Name: "Poverty God's Wrath"
+  Description: |-
+    Lose {Value1} |Luck|.
+    Whenever a percent chance fails, {PercentValue1}|n:%| chance to gain {Value2} |Firepower| at the start of {PlayerName}'s turn.
+    This is not affected by |Luck|.
+  FlavorText: "Placeholder text."
+
+CirnosPlan:
+  Name: "Cirno's Plan"
+  Description: |-
+    Look at a random card from the draw pile.
+    Gain |Barrier| equal to {RandomMinValue1}~{RandomMaxValue1} times the total cost of the card.
+  FlavorText: "Follow my lead and you too can have the strongest cards!"
+
+SemiAutomatedDoll:
+  Name: "Semi-Automated Doll"
+  Description: |-
+    At the start of combat and when the draw pile is shuffled, {SelfName} randomly changes it's color and gains an effect based on the outcome.
+    {PercentValue1}|n:%| chance to become Philosopher's color, gaining the effects of all possible colors.
+  FlavorText: "Placeholder text."
+
+SemiAutomatedDollW:
+  Name: "Semi-Automated Doll (White)"
+  Description: |-
+    Whenever an enemy attacks, gain {RandomMinShield}~{RandomMaxShield} |Barrier|.
+    At the end of {PlayerName}'s turn, {PercentValue2}|n:%| chance to upgrade {Value1} card{Value1:plural one='' other='s'} in hand until the end of combat.
+  ExtraDescription1: "Semi-Automated Doll (White)"
+  DetailText: "Playing {SelfName} exiles itself with with no other effects."
+  FlavorText: "Placeholder text."
+
+SemiAutomatedDollU:
+  Name: "Semi-Automated Doll (Blue)"
+  Description: |-
+    At the end of {PlayerName}'s turn, add {Value1} random token card{Value1:plural one='' other='s'} to the draw pile.
+    {PercentValue2}|n:%| chance for each token card to be |Upgraded|.
+  DetailText: "Playing {SelfName} exiles itself with with no other effects."
+  FlavorText: "Placeholder text."
+
+SemiAutomatedDollB:
+  Name: "Semi-Automated Doll (Black)"
+  Description: "At the end of {PlayerName}'s turn, a random enemy loses {RandomMinValue1}~{RandomMaxValue1} life."
+  DetailText: "Playing {SelfName} exiles itself with with no other effects."
+  FlavorText: "Placeholder text."
+
+SemiAutomatedDollR:
+  Name: "Semi-Automated Doll (Red)"
+  Description: "At the end of {PlayerName}'s turn, deal {RandomMinDamage}~{RandomMaxDamage} damage to a random enemy."
+  DetailText: "Playing {SelfName} exiles itself with with no other effects."
+  FlavorText: "Placeholder text."
+
+SemiAutomatedDollG:
+  Name: "Semi-Automated Doll (Green)"
+  Description: "At the end of {PlayerName}'s turn, gain {Value1} |Firepower|, |Spirit|, |Luck| or |Order|."
+  DetailText: "Playing {SelfName} exiles itself with with no other effects."
+  FlavorText: "Placeholder text."
+
+SemiAutomatedDollC:
+  Name: "Semi-Automated Doll (Colorless)"
+  Description: |-
+    At the end of {PlayerName}'s turn, generate and play a random non-Rare |Tool| or gadget card.
+    {PercentValue2}|n:%| chance to generate a rare |Tool| or gadget card instead.
+  UpgradedDescription: |-
+    At the end of {PlayerName}'s turn, generate and play a random non-Rare |Tool| or gadget card.
+    {PercentValue2}|n:%| chance to generate a rare |Tool| or gadget card instead.
+    Generated gadgets will be |Upgraded|.
+  DetailText: "Playing {SelfName} exiles itself with with no other effects."
+  FlavorText: "Placeholder text."
+
+SemiAutomatedDollP:
+  Name: "Semi-Automated Doll (Philosopher's)"
+  Description: "Contains all activation effects of the other |n:Semi-Automated Doll| colors."
+  UpgradedDescription: "Contains all upgraded activation effects of the other |n:Semi-Automated Doll| colors."
+  ExtraDescription1: "Semi-Automated Doll (Philosopher's)"
+  DetailText: "Playing {SelfName} exiles itself with with no other effects."
+  FlavorText: "Placeholder text."

@@ -1,0 +1,98 @@
+DummyUnpredictableSe:
+  Name: "Unpredictable"
+  Brief: |-
+    One or more effects are randomized. Your fate is unknown!
+    Values cannot be negative.
+  Description: |-
+    One or more effects are randomized. Your fate is unknown!
+    Values cannot be negative.
+
+ChaosSe:
+  Name: "Chaos!"
+  Brief: "All |Unpredictable| effects will have their range expanded in both directions. Opposes |Order|."
+  Description: "All |Unpredictable| effects will have their range expanded by {Level} in both directions. Opposes |Order|."
+
+OrderSe:
+  Name: "Order"
+  Brief: "All |Unpredictable| effects will have their range narrowed in both directions until both values are equal. Opposes |Chaos!|."
+  Description: "All |Unpredictable| effects will have their range narrowed by {Level} in both directions until both values are equal. Opposes |Chaos!|."
+
+TempChaosSe:
+  Name: "Temporary Chaos!"
+  Brief: "|Chaos!| increased until end of turn."
+  Description: "Until end of turn, gain {Level} |Chaos!|"
+
+TempOrderSe:
+  Name: "Temporary Order"
+  Brief: "|Order| increased until end of turn."
+  Description: "Until end of turn, gain {Level} |Order|"
+
+LuckSe:
+  Name: "Luck"
+  Brief: "All |Unpredictable| effects are more likely to be a good outcome."
+  Description: "All |Unpredictable| effects will reroll their outcome {Level} time{Level:plural one='' other='s'}.\nRanged effects will aim for the upper half, while percents will aim to succeed."
+
+TempLuckSe:
+  Name: "Temporary Luck"
+  Brief: "|Luck| increased until end of turn."
+  Description: "Until end of turn, gain {Level} |Luck|."
+
+FragmentedGrimoireSe:
+  Name: "Fragmented Grimoire"
+  Brief: |-
+    The choice only displays the mana cost and color of the cards.
+    At the start of {PlayerName}'s turn, choose a |p:completely random| card to add to hand.
+  Description: |-
+    At the start of {PlayerName}'s turn, choose {Count} of {Level} |p:completely random| card{Count:plural one='' other='s'} to add to the hand. {Count:plural one='It' other='They'} temporarily cost{Count:plural one='s' other=''} {Mana} and {Count:plural one='has' other='have'} |Exile| and |Ethereal|.
+    The choice only displays the mana cost and color of the card{Level:plural one='' other='s'}.
+  ExtraDescription: |-
+    At the start of {PlayerName}'s turn, choose {Count} of {Level} |p:completely random| card{Count:plural one='' other='s'} to add to the hand. {Count:plural one='It' other='They'} temporarily cost{Count:plural one='s' other=''} {Mana} and {Count:plural one='has' other='have'} |Exile| and |Ethereal|.
+    The choice only displays the mana cost, color and rarity of the card{Level:plural one='' other='s'}.
+
+WhiteRabbitLuckSe:
+  Name: "Luck of the White Rabbit"
+  Brief: |-
+    At the start of {PlayerName}'s turn, play a random card from the hand, draw pile, discard pile, or exile.
+  Description: |-
+    At the start of {PlayerName}'s turn, play {Level} random card{Level:plural one='' other='s'} from the hand, draw pile, discard pile, or exile.
+
+PhantomicKillerSe:
+  Name: "Phantomic Killer"
+  Brief: "Chance to deal random attack damage to a random enemy when playing a card."
+  Description: "{PercentValue}|n:%| chance to deal {RandomMinDamage}~{RandomMaxDamage} attack damage to a random enemy when playing a card."
+
+LuckNegativeSe:
+  Name: "Luck Down"
+  Brief: "All |Unpredictable| effects are more likely to be a bad outcome."
+  Description: "All |Unpredictable| effects will reroll their outcome {Level} time{Level:plural one='' other='s'}.\nRanged effects will aim for the lower half, while percents will aim to fail."
+
+TempLuckNegativeSe:
+  Name: "Temporary Luck Down"
+  Brief: "|Luck| decreased until end of turn."
+  Description: "Until the end of turn, lose {Level} |Luck|."
+
+SpacetimeSeamSe:
+  Name: "Spacetime Seam"
+  Brief: "At the start of {PlayerName}'s turn, chance to play a stored card."
+  Description: |-
+    At the start of {PlayerName}'s turn, {Count}|n:%| chance {Level:plural one='' other='per stored card'} to play a copy of the card.
+    There {Level:plural one='is' other='are'} {Level} stored card{Level:plural one='' other='s'}.
+
+ReverseHierarchySe:
+  Name: "Reverse Hierarchy"
+  Brief: |-
+    Whenever a card enters the hand, remove it from combat and add a |p:completely random| card to the hand. Mana of any color can be spent to pay its mana cost.
+    {PercentValue1}|n:%| chance the card is upgraded.
+  Description: |-
+    Whenever a card enters the hand, remove it from combat and add {Level} |p:completely random| card{Level:plural one='' other='s'} to the hand. Mana of any color can be spent to pay {Level:plural one='its' other='their'} mana cost{Level:plural one='' other='s'}.
+    {Count}|n:%| chance {Level:plural one='the card is' other='for each card to be'} |Upgraded|.
+
+HonorDefianceAvoidanceSe:
+  Name: "Honor the Avoidance of Defiance"
+  Brief: "Gain |Order| at the start of {PlayerName}'s turn. If there are no stacks of |Chaos| at the end of combat, gain life."
+  Description: "Gain {Level} |Order| at the start of {PlayerName}'s turn. If there are no stacks of |Chaos| at the end of combat, gain {Level} life."
+
+PovertyGodsWrathSe:
+  Name: "Poverty God's Wrath"
+  Brief: "Whenever a percent chance fails, chance to gain firepower at the start of {PlayerName}'s turn. This is not affected by |Luck|."
+  Description: "Whenever a percent cance fails, {PercentValue1}|n:%| chance to gain {Level} |Firepower| at the start of {PlayerName}'s turn. This is not affected by |Luck|."

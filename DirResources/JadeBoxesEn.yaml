@@ -1,0 +1,5 @@
+AssistedChaosJadeBox:
+  Name: "Assisted Chaos"
+  Description: |-
+    Start the game with {Value1} random |Unpredictable| card{Value1:plural one='' other='s'}.
+    At the start of {PlayerName}'s first turn each combat, gain {Value2} |Temporary Chaos!|.
