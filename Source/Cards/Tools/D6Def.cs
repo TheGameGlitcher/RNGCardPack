@@ -59,31 +59,32 @@ namespace RNGCardPack.Source.Cards.Tools
             if (base.Battle.BattleShouldEnd)
                 yield break;
 
-            else
+            Exhibit[] exhibits = base.Battle.Player.Exhibits.Where((Exhibit e) => e.LosableType == ExhibitLosableType.Losable).ToArray();
+
+            if (exhibits.Length <= 0)
+                yield break;
+
+            Exhibit newExhibit;
+            List<Exhibit> exhibitsToLose = new List<Exhibit>();
+
+            for (int i = 0; i < Value1; i++)
+                exhibitsToLose.Add(exhibits.Sample(base.GameRun.BattleCardRng));
+
+            foreach (Exhibit exhibit in exhibitsToLose)
+                base.GameRun.LoseExhibit(exhibit, false, true);
+
+            for (int i = 0; i < Value2; i++)
             {
-                Exhibit[] exhibits = base.Battle.Player.Exhibits.Where((Exhibit e) => e.LosableType == ExhibitLosableType.Losable).ToArray();
-                Exhibit newExhibit;
-                List<Exhibit> exhibitsToLose = new List<Exhibit>();
+                newExhibit = GameRun.RollNormalExhibit(GameRun.ExhibitRng, new ExhibitWeightTable(new RarityWeightTable(0.5f, 0.33f, 0.17f, 0f), AppearanceWeightTable.AllOnes), null);
 
-                for (int i = 0; i < Value1; i++)
-                    exhibitsToLose.Add(exhibits.Sample(base.GameRun.BattleCardRng));
-
-                foreach (Exhibit exhibit in exhibitsToLose)
-                    base.GameRun.LoseExhibit(exhibit, false, true);
-
-                for (int i = 0; i < Value2; i++)
-                {
+                while (GameRun.Player.HasExhibit(newExhibit))
                     newExhibit = GameRun.RollNormalExhibit(GameRun.ExhibitRng, new ExhibitWeightTable(new RarityWeightTable(0.5f, 0.33f, 0.17f, 0f), AppearanceWeightTable.AllOnes), null);
 
-                    while (GameRun.Player.HasExhibit(newExhibit))
-                        newExhibit = GameRun.RollNormalExhibit(GameRun.ExhibitRng, new ExhibitWeightTable(new RarityWeightTable(0.5f, 0.33f, 0.17f, 0f), AppearanceWeightTable.AllOnes), null);
-
-                    if (newExhibit != null)
-                        GameMaster.DebugGainExhibit(newExhibit);
-                }
-
-                    yield break;
+                if (newExhibit != null)
+                    GameMaster.DebugGainExhibit(newExhibit);
             }
+
+            yield break;
         }
     }
 }

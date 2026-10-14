@@ -94,16 +94,12 @@ namespace RNGCardPack.Source.StatusEffects.Effects
 
         protected override void OnRemoved(Unit unit)
         {
-            base.OnRemoved(unit);
-
             UnsubscribeCards(cardEventSubscribers.ToArray());
 
-             foreach (RNGCardPackStatusEffect subscriber in statusEventSubscribers)
-             {
-                statusEventSubscribers.Remove(subscriber);
+            foreach (RNGCardPackStatusEffect subscriber in statusEventSubscribers)
                 subscriber.PercentRollFailed -= OnPercentRollFailed;
-             }
 
+            statusEventSubscribers.Clear();
         }
 
         private void OnAddCard(CardsEventArgs args)
@@ -133,7 +129,7 @@ namespace RNGCardPack.Source.StatusEffects.Effects
 
         private void OnAddStatusEffect(StatusEffectApplyEventArgs args)
         {
-            if (args.Effect is RNGCardPackStatusEffect && !statusEventSubscribers.Contains(args.Effect as RNGCardPackStatusEffect))
+            if (!(args.Effect is PovertyGodsWrathSe) && args.Effect is RNGCardPackStatusEffect && !statusEventSubscribers.Contains(args.Effect as RNGCardPackStatusEffect))
             {
                 statusEventSubscribers.Add(args.Effect as RNGCardPackStatusEffect);
                 (args.Effect as RNGCardPackStatusEffect).PercentRollFailed += OnPercentRollFailed;
@@ -142,7 +138,7 @@ namespace RNGCardPack.Source.StatusEffects.Effects
 
         private void OnRemoveStatusEffect(StatusEffectEventArgs args)
         {
-            if (args.Effect is RNGCardPackStatusEffect && statusEventSubscribers.Contains(args.Effect as RNGCardPackStatusEffect))
+            if (!(args.Effect is PovertyGodsWrathSe) && args.Effect is RNGCardPackStatusEffect && statusEventSubscribers.Contains(args.Effect as RNGCardPackStatusEffect))
             {
                 statusEventSubscribers.Remove(args.Effect as RNGCardPackStatusEffect);
                 (args.Effect as RNGCardPackStatusEffect).PercentRollFailed -= OnPercentRollFailed;
@@ -156,9 +152,9 @@ namespace RNGCardPack.Source.StatusEffects.Effects
 
             if (Count > 0)
             {
-                yield return new ApplyStatusEffectAction<Firepower>(base.Battle.Player, Count, null, null, null, 0.2f);
-
                 this.NotifyActivating();
+
+                yield return new ApplyStatusEffectAction<Firepower>(base.Battle.Player, Count, null, null, null, 0.2f);
             }
 
             Count = 0;
@@ -176,6 +172,9 @@ namespace RNGCardPack.Source.StatusEffects.Effects
                     (card as RNGCardPackCard).PercentRollFailed += OnPercentRollFailed;
                 }
             }
+
+            foreach (var card in cardEventSubscribers)
+                Debug.Log(card);
         }
 
         private void UnsubscribeCards(Card[] cards)
@@ -194,9 +193,9 @@ namespace RNGCardPack.Source.StatusEffects.Effects
         {
             if (RNGGenericPercentSe(PercentValue1, false, false))
             {
-                Count += Level;
-
                 this.NotifyActivating();
+
+                Count += Level;
             }
         }
     }

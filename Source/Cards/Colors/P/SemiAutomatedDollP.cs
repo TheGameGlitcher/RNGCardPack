@@ -67,8 +67,8 @@ namespace RNGCardPack.Source.Cards.Colors.P
         {
             IsRandom = true;
 
-            BaseRandomMinShield = 10;
-            BaseRandomMaxShield = 20;
+            BaseRandomMinShield = 5;
+            BaseRandomMaxShield = 15;
 
             BaseRandomMinDamage = 10;
             BaseRandomMaxDamage = 20;
@@ -76,8 +76,8 @@ namespace RNGCardPack.Source.Cards.Colors.P
             BaseUpgradedRandomMinDamage = 25;
             BaseUpgradedRandomMaxDamage = 30;
 
-            BaseUpgradedRandomMinShield = 15;
-            BaseUpgradedRandomMaxShield = 25;
+            BaseUpgradedRandomMinShield = 10;
+            BaseUpgradedRandomMaxShield = 20;
 
             BasePercentValue1 = 5;
             BaseUpgradedPercentValue1 = 10;

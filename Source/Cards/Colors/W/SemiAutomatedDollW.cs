@@ -66,11 +66,11 @@ namespace RNGCardPack.Source.Cards.Colors.W
         {
             IsRandom = true;
 
-            BaseRandomMinShield = 10;
-            BaseRandomMaxShield = 20;
+            BaseRandomMinShield = 5;
+            BaseRandomMaxShield = 15;
 
-            BaseUpgradedRandomMinShield = 15;
-            BaseUpgradedRandomMaxShield = 25;
+            BaseUpgradedRandomMinShield = 10;
+            BaseUpgradedRandomMaxShield = 20;
 
             BasePercentValue1 = 5;
             BaseUpgradedPercentValue1 = 10;
@@ -98,7 +98,7 @@ namespace RNGCardPack.Source.Cards.Colors.W
 
         private IEnumerable<BattleAction> OnDamageRecieving(DamageEventArgs args)
         {
-            if (args.Cause != ActionCause.OnlyCalculate && base.Battle.AllAliveEnemies.Contains(args.ActionSource))
+            if (base.Battle.HandZone.Contains(this) && args.Cause != ActionCause.OnlyCalculate && base.Battle.AllAliveEnemies.Contains(args.ActionSource))
             {
                 this.NotifyActivating();
 

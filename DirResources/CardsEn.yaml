@@ -287,15 +287,15 @@ CirnosPlan:
 SemiAutomatedDoll:
   Name: "Semi-Automated Doll"
   Description: |-
-    At the start of combat and when the draw pile is shuffled, {SelfName} randomly changes it's color and gains an effect based on the outcome.
+    |At the start of combat and when the draw pile is shuffled|: {SelfName} randomly changes it's color and gains an effect based on the outcome.
     {PercentValue1}|n:%| chance to become Philosopher's color, gaining the effects of all possible colors.
   FlavorText: "Placeholder text."
 
 SemiAutomatedDollW:
   Name: "Semi-Automated Doll (White)"
   Description: |-
-    Whenever an enemy attacks, gain {RandomMinShield}~{RandomMaxShield} |Barrier|.
-    At the end of {PlayerName}'s turn, {PercentValue2}|n:%| chance to upgrade {Value1} card{Value1:plural one='' other='s'} in hand until the end of combat.
+    |While in hand whenever an enemy attacks|: Gain {RandomMinShield}~{RandomMaxShield} |Barrier|.
+    |At the end of the turn|: {PercentValue2}|n:%| chance to upgrade {Value1} card{Value1:plural one='' other='s'} in hand until the end of combat.
   ExtraDescription1: "Semi-Automated Doll (White)"
   DetailText: "Playing {SelfName} exiles itself with with no other effects."
   FlavorText: "Placeholder text."
@@ -303,36 +303,36 @@ SemiAutomatedDollW:
 SemiAutomatedDollU:
   Name: "Semi-Automated Doll (Blue)"
   Description: |-
-    At the end of {PlayerName}'s turn, add {Value1} random token card{Value1:plural one='' other='s'} to the draw pile.
+    |At the end of the turn|: Add {Value1} random token card{Value1:plural one='' other='s'} to the draw pile.
     {PercentValue2}|n:%| chance for each token card to be |Upgraded|.
   DetailText: "Playing {SelfName} exiles itself with with no other effects."
   FlavorText: "Placeholder text."
 
 SemiAutomatedDollB:
   Name: "Semi-Automated Doll (Black)"
-  Description: "At the end of {PlayerName}'s turn, a random enemy loses {RandomMinValue1}~{RandomMaxValue1} life."
+  Description: "|At the end of the turn|: A random enemy loses {RandomMinValue1}~{RandomMaxValue1} life."
   DetailText: "Playing {SelfName} exiles itself with with no other effects."
   FlavorText: "Placeholder text."
 
 SemiAutomatedDollR:
   Name: "Semi-Automated Doll (Red)"
-  Description: "At the end of {PlayerName}'s turn, deal {RandomMinDamage}~{RandomMaxDamage} damage to a random enemy."
+  Description: "|At the end of the turn|: Deal {RandomMinDamage}~{RandomMaxDamage} damage to a random enemy."
   DetailText: "Playing {SelfName} exiles itself with with no other effects."
   FlavorText: "Placeholder text."
 
 SemiAutomatedDollG:
   Name: "Semi-Automated Doll (Green)"
-  Description: "At the end of {PlayerName}'s turn, gain {Value1} |Firepower|, |Spirit|, |Luck| or |Order|."
+  Description: "|At the end of the turn|: Gain {Value1} |Firepower|, |Spirit|, |Luck| or |Order|."
   DetailText: "Playing {SelfName} exiles itself with with no other effects."
   FlavorText: "Placeholder text."
 
 SemiAutomatedDollC:
   Name: "Semi-Automated Doll (Colorless)"
   Description: |-
-    At the end of {PlayerName}'s turn, generate and play a random non-Rare |Tool| or gadget card.
+    |At the end of the turn|: Generate and play a random non-Rare |Tool| or gadget card.
     {PercentValue2}|n:%| chance to generate a rare |Tool| or gadget card instead.
   UpgradedDescription: |-
-    At the end of {PlayerName}'s turn, generate and play a random non-Rare |Tool| or gadget card.
+    |At the end of the turn|: Generate and play a random non-Rare |Tool| or gadget card.
     {PercentValue2}|n:%| chance to generate a rare |Tool| or gadget card instead.
     Generated gadgets will be |Upgraded|.
   DetailText: "Playing {SelfName} exiles itself with with no other effects."

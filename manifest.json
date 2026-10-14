@@ -1,6 +1,6 @@
 {
   "name": "RNGCardPack",
-  "version_number": "1.0.0",
+  "version_number": "1.0.1",
   "website_url": "https://gitlab.com/rmrfmaxxc1/lbol_sample_character_mod",
   "description": "Adds a card pack of cards with a theme of randomness. Made for gamblers.",
   "dependencies": [ "BepInEx-BepInExPack-5.4.2100", "TeamNeo-Sideloader-0.9.7601"]

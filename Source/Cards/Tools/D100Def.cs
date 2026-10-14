@@ -61,7 +61,6 @@ namespace RNGCardPack.Source.Cards.Tools
         public D100() : base()
         {
             IsRandom = true;
-            AllowOrderChaos = true;
 
             BaseValue3 = 2;
             BaseValue4 = 2;
@@ -72,7 +71,7 @@ namespace RNGCardPack.Source.Cards.Tools
             BaseValue9 = 8;
 
             BaseRandomMinValue1 = 1;
-            BaseRandomMaxValue1 = 10;
+            BaseRandomMaxValue1 = 9;
         }
 
         protected override IEnumerable<BattleAction> Actions(UnitSelector selector, ManaGroup consumingMana, Interaction precondition)
@@ -97,7 +96,7 @@ namespace RNGCardPack.Source.Cards.Tools
                         break;
 
                     case 2:
-                        Card diceCard = Library.CreateCard(DiceCards[(RNGGenericRange(0, DiceCards.Count))]);
+                        Card diceCard = Library.CreateCard(DiceCards[(RNGGenericRange(0, DiceCards.Count - 1))]);
 
                         diceCard.IsPlayTwiceToken = true;
                         yield return new PlayCardAction(diceCard);
@@ -132,7 +131,7 @@ namespace RNGCardPack.Source.Cards.Tools
                         break;
 
                     default:
-                        throw new ArgumentOutOfRangeException($"Variable {nameof(result)} was set to an invalid value. Check the input variables for {nameof(RNGGenericRange)}.");
+                        throw new ArgumentOutOfRangeException(nameof(result), result, $"Result was set to an invalid value. Check the input variables for {nameof(RNGGenericRange)}.");
                 }
             }
         }
