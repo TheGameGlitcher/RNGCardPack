@@ -235,7 +235,7 @@ namespace RNGCardPack.Source.Cards.Colors.P
             base.ReactBattleEvent<GameEventArgs>(base.Battle.BattleStarted, new EventSequencedReactor<GameEventArgs>(this.TransformCard));
             base.ReactBattleEvent<GameEventArgs>(base.Battle.Reshuffled, new EventSequencedReactor<GameEventArgs>(this.TransformCard));
 
-            base.ReactBattleEvent<DamageEventArgs>(base.Battle.Player.DamageReceiving, new EventSequencedReactor<DamageEventArgs>(this.OnDamageRecieving)); // Extra white effect
+            base.HandleBattleEvent<DamageEventArgs>(base.Battle.Player.DamageReceiving, new GameEventHandler<DamageEventArgs>(this.OnDamageRecieving)); // Extra white effect
         }
 
         private IEnumerable<BattleAction> TransformCard(GameEventArgs args)
@@ -247,16 +247,14 @@ namespace RNGCardPack.Source.Cards.Colors.P
             yield break;
         }
 
-        private IEnumerable<BattleAction> OnDamageRecieving(DamageEventArgs args)
+        private void OnDamageRecieving(DamageEventArgs args)
         {
-            if (args.Cause != ActionCause.OnlyCalculate && base.Battle.AllAliveEnemies.Contains(args.ActionSource))
+            if (base.Battle.HandZone.Contains(this) && args.Cause != ActionCause.OnlyCalculate && base.Battle.AllAliveEnemies.Contains(args.Source))
             {
                 this.NotifyActivating();
 
-                yield return RNGBlockShieldAction(RandomMinShield, RandomMaxShield, true);
+                React(RNGBlockShieldAction(RandomMinShield, RandomMaxShield, true));
             }
-
-            yield break;
         }
 
         public override IEnumerable<BattleAction> OnTurnEndingInHand()

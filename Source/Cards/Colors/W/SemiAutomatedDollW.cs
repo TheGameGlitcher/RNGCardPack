@@ -7,6 +7,7 @@ using LBoL.Core.Battle.BattleActions;
 using LBoL.Core.Battle.Interactions;
 using LBoL.Core.Cards;
 using LBoL.Core.Randoms;
+using LBoL.Core.StatusEffects;
 using LBoL.EntityLib.StatusEffects.Others;
 using LBoLEntitySideloader.Attributes;
 using RNGCardPack.Source.Cards.Template;
@@ -16,6 +17,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
+using UnityEngine;
 using UnityEngine.InputSystem.Controls;
 
 namespace RNGCardPack.Source.Cards.Colors.W
@@ -84,7 +86,7 @@ namespace RNGCardPack.Source.Cards.Colors.W
             base.ReactBattleEvent<GameEventArgs>(base.Battle.BattleStarted, new EventSequencedReactor<GameEventArgs>(this.TransformCard));
             base.ReactBattleEvent<GameEventArgs>(base.Battle.Reshuffled, new EventSequencedReactor<GameEventArgs>(this.TransformCard));
 
-            base.ReactBattleEvent<DamageEventArgs>(base.Battle.Player.DamageReceiving, new EventSequencedReactor<DamageEventArgs>(this.OnDamageRecieving));
+            base.HandleBattleEvent<DamageEventArgs>(base.Battle.Player.DamageReceiving, new GameEventHandler<DamageEventArgs>(this.OnDamageRecieving));
         }
 
         private IEnumerable<BattleAction> TransformCard(GameEventArgs args)
@@ -96,16 +98,14 @@ namespace RNGCardPack.Source.Cards.Colors.W
             yield break;
         }
 
-        private IEnumerable<BattleAction> OnDamageRecieving(DamageEventArgs args)
+        private void OnDamageRecieving(DamageEventArgs args)
         {
-            if (base.Battle.HandZone.Contains(this) && args.Cause != ActionCause.OnlyCalculate && base.Battle.AllAliveEnemies.Contains(args.ActionSource))
+            if (base.Battle.HandZone.Contains(this) && args.Cause != ActionCause.OnlyCalculate && base.Battle.AllAliveEnemies.Contains(args.Source))
             {
                 this.NotifyActivating();
 
-                yield return RNGBlockShieldAction(RandomMinShield, RandomMaxShield, true);
+                React(RNGBlockShieldAction(RandomMinShield, RandomMaxShield, true));
             }
-
-            yield break;
         }
 
         public override IEnumerable<BattleAction> OnTurnEndingInHand()

@@ -39,7 +39,7 @@ namespace RNGCardPack.Source.Jadeboxes
         {
             protected override void OnGain(GameRunController gameRun)
             {
-                Card[] cards = gameRun.RollCards(gameRun.CardRng, new CardWeightTable(RarityWeightTable.EnemyCard, OwnerWeightTable.Valid, CardTypeWeightTable.CanBeLoot, false), Value1, false, false, (CardConfig config) => config.RelativeEffects.Contains("DummyUnpredictableSe"));
+                Card[] cards = gameRun.RollCards(gameRun.CardRng, new CardWeightTable(RarityWeightTable.BattleCard, OwnerWeightTable.Valid, CardTypeWeightTable.CanBeLoot, false), Value1, false, false, (CardConfig config) => config.RelativeEffects.Contains("DummyUnpredictableSe"));
 
                 gameRun.AddDeckCards(cards, false, null);
             }

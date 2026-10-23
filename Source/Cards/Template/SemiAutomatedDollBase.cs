@@ -34,7 +34,7 @@ namespace RNGCardPack.Source.Cards.Template
                                                                           typeof(PManaCard), typeof(Fengmozhen), typeof(Shenyuzha), typeof(YinyangCard), typeof(ShuihuoCard), typeof(FengleiCard),
                                                                           typeof(ShanyuCard), typeof(Xiaozhuo), typeof(Astrology), typeof(Potion), typeof(StarlightTaifeng), typeof(RedMogu),
                                                                           typeof(PurpleMogu), typeof(BlueMogu), typeof(Knife), typeof(GroupOfKnife), typeof(SummerFlower), typeof(IceWing),
-                                                                          typeof(IceBolt), typeof(YuetuYuyi), typeof(FakeMoon), typeof(MeilingLianhua) };
+                                                                          typeof(IceBolt), typeof(YuetuYuyi), typeof(FakeMoon), typeof(MeilingLianhua), typeof(MeteonicDebris) };
 
         public static List<Type> Statuses { get; } = new List<Type>() { typeof(Firepower), typeof(Spirit), typeof(LuckSe), typeof(OrderSe) };
 
