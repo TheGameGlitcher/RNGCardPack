@@ -12,6 +12,8 @@ using LBoL.Core.StatusEffects;
 using LBoL.Core.Units;
 using LBoLEntitySideloader.Attributes;
 using LBoLEntitySideloader.Utils;
+using RNGCardPack.Source.BattleActions.EventsManager;
+using RNGCardPack.Source.BattleActions.RollPercentAction;
 using RNGCardPack.Source.Cards.Statuses;
 using RNGCardPack.Source.Cards.Template;
 using RNGCardPack.Source.StatusEffects.Template;
@@ -29,10 +31,6 @@ namespace RNGCardPack.Source.StatusEffects.Effects
         {
             StatusEffectConfig config = GetDefaultStatusEffectConfig();
 
-            config.HasCount = true;
-
-            config.CountStackType = StackType.Add;
-
             config.SFX = "Buff";
 
             return config;
@@ -47,156 +45,34 @@ namespace RNGCardPack.Source.StatusEffects.Effects
             PercentValue1 = 50;
         }
 
-        private readonly List<RNGCardPackCard> cardEventSubscribers = new List<RNGCardPackCard>();
-        private readonly List<RNGCardPackStatusEffect> statusEventSubscribers = new List<RNGCardPackStatusEffect>();
-
         protected override void OnAdded(Unit unit)
         {
             if (!(unit is PlayerUnit))
                 Debug.LogError(this.DebugName + " should not apply to non-player unit.");
 
-            base.HandleOwnerEvent<CardsEventArgs>(base.Battle.CardsAddedToDiscard, new GameEventHandler<CardsEventArgs>(this.OnAddCard));
-            base.HandleOwnerEvent<CardsEventArgs>(base.Battle.CardsAddedToHand, new GameEventHandler<CardsEventArgs>(this.OnAddCard));
-            base.HandleOwnerEvent<CardsEventArgs>(base.Battle.CardsAddedToExile, new GameEventHandler<CardsEventArgs>(this.OnAddCard));
-
-            base.HandleOwnerEvent<CardsAddingToDrawZoneEventArgs>(base.Battle.CardsAddedToDrawZone, new GameEventHandler<CardsAddingToDrawZoneEventArgs>(this.OnAddCardToDraw));
-
-            base.HandleOwnerEvent<CardTransformEventArgs>(base.Battle.CardTransformed, new GameEventHandler<CardTransformEventArgs>(this.OnCardTransformed));
-
-            base.HandleOwnerEvent<StatusEffectApplyEventArgs>(base.Battle.Player.StatusEffectAdded, new GameEventHandler<StatusEffectApplyEventArgs>(this.OnAddStatusEffect));
-
-            base.HandleOwnerEvent<StatusEffectEventArgs>(base.Battle.Player.StatusEffectRemoved, new GameEventHandler<StatusEffectEventArgs>(this.OnRemoveStatusEffect));
-
-            base.ReactOwnerEvent<UnitEventArgs>(base.Battle.Player.TurnStarted, new EventSequencedReactor<UnitEventArgs>(this.OnTurnStarted));
-
-            List<Card> cards = base.Battle.EnumerateAllCards().ToList();
-
-            foreach (Card card in cards)
-            {
-                if (card is RNGCardPackCard && (card as RNGCardPackCard).IsRandom && !cardEventSubscribers.Contains(card))
-                    cardEventSubscribers.Add(card as RNGCardPackCard);
-            }
-
-            List<StatusEffect> statuses = base.Battle.Player.StatusEffects.ToList();
-
-            foreach (StatusEffect status in statuses)
-            {
-                if (status is RNGCardPackStatusEffect && !statusEventSubscribers.Contains(status))
-                    statusEventSubscribers.Add(status as RNGCardPackStatusEffect);
-            }
-
-            foreach (RNGCardPackCard subscriber in cardEventSubscribers)
-                subscriber.PercentRollFailed += OnPercentRollFailed;
-
-            foreach (RNGCardPackStatusEffect subscriber in statusEventSubscribers)
-                subscriber.PercentRollFailed += OnPercentRollFailed;
+            ReactOwnerEvent(RNGCardEventsManager.PercentRolled, OnPercentRolled);
         }
 
-        protected override void OnRemoved(Unit unit)
-        {
-            UnsubscribeCards(cardEventSubscribers.ToArray());
-
-            foreach (RNGCardPackStatusEffect subscriber in statusEventSubscribers)
-                subscriber.PercentRollFailed -= OnPercentRollFailed;
-
-            statusEventSubscribers.Clear();
-        }
-
-        private void OnAddCard(CardsEventArgs args)
-        {
-            SubscribeCards(args.Cards);
-        }
-
-        private void OnAddCardToDraw(CardsAddingToDrawZoneEventArgs args)
-        {
-            SubscribeCards(args.Cards);
-        }
-
-        private void OnCardTransformed(CardTransformEventArgs args)
-        {
-            if (args.SourceCard is RNGCardPackCard && (args.SourceCard as RNGCardPackCard).IsRandom && cardEventSubscribers.Contains(args.SourceCard as RNGCardPackCard))
-            {
-                cardEventSubscribers.Remove(args.SourceCard as RNGCardPackCard);
-                (args.SourceCard as RNGCardPackCard).PercentRollFailed -= OnPercentRollFailed;
-            }
-
-            if (args.DestinationCard is RNGCardPackCard && (args.DestinationCard as RNGCardPackCard).IsRandom && !cardEventSubscribers.Contains(args.DestinationCard as RNGCardPackCard))
-            {
-                cardEventSubscribers.Add(args.DestinationCard as RNGCardPackCard);
-                (args.DestinationCard as RNGCardPackCard).PercentRollFailed += OnPercentRollFailed;
-            }
-        }
-
-        private void OnAddStatusEffect(StatusEffectApplyEventArgs args)
-        {
-            if (!(args.Effect is PovertyGodsWrathSe) && args.Effect is RNGCardPackStatusEffect && !statusEventSubscribers.Contains(args.Effect as RNGCardPackStatusEffect))
-            {
-                statusEventSubscribers.Add(args.Effect as RNGCardPackStatusEffect);
-                (args.Effect as RNGCardPackStatusEffect).PercentRollFailed += OnPercentRollFailed;
-            }
-        }
-
-        private void OnRemoveStatusEffect(StatusEffectEventArgs args)
-        {
-            if (!(args.Effect is PovertyGodsWrathSe) && args.Effect is RNGCardPackStatusEffect && statusEventSubscribers.Contains(args.Effect as RNGCardPackStatusEffect))
-            {
-                statusEventSubscribers.Remove(args.Effect as RNGCardPackStatusEffect);
-                (args.Effect as RNGCardPackStatusEffect).PercentRollFailed -= OnPercentRollFailed;
-            }
-        }
-
-        private IEnumerable<BattleAction> OnTurnStarted(UnitEventArgs args)
+        private IEnumerable<BattleAction> OnPercentRolled(PercentEventArgs args)
         {
             if (base.Battle.BattleShouldEnd)
                 yield break;
 
-            if (Count > 0)
+            if (args.Source != this && !args.IsReroll && !args.Result)
             {
-                this.NotifyActivating();
+                var action = new RollPercentAction(this, PercentValue1, false);
 
-                yield return new ApplyStatusEffectAction<Firepower>(base.Battle.Player, Count, null, null, null, 0.2f);
+                yield return action;
+
+                if (action.Args.Result)
+                {
+                    this.NotifyActivating();
+
+                    yield return new ApplyStatusEffectAction<Firepower>(this.Owner, this.Level);
+                }
             }
-
-            Count = 0;
 
             yield break;
-        }
-
-        private void SubscribeCards(Card[] cards)
-        {
-            foreach (Card card in cards)
-            {
-                if (card is RNGCardPackCard && (card as RNGCardPackCard).IsRandom && !cardEventSubscribers.Contains(card as RNGCardPackCard))
-                {
-                    cardEventSubscribers.Add(card as RNGCardPackCard);
-                    (card as RNGCardPackCard).PercentRollFailed += OnPercentRollFailed;
-                }
-            }
-
-            foreach (var card in cardEventSubscribers)
-                Debug.Log(card);
-        }
-
-        private void UnsubscribeCards(Card[] cards)
-        {
-            foreach (Card card in cards)
-            {
-                if (card is RNGCardPackCard && (card as RNGCardPackCard).IsRandom && cardEventSubscribers.Contains(card))
-                {
-                    cardEventSubscribers.Remove(card as RNGCardPackCard);
-                    (card as RNGCardPackCard).PercentRollFailed -= OnPercentRollFailed;
-                }
-            }
-        }
-
-        private void OnPercentRollFailed(object source, EventArgs args)
-        {
-            if (RNGGenericPercentSe(PercentValue1, false, false))
-            {
-                this.NotifyActivating();
-
-                Count += Level;
-            }
         }
     }
 }

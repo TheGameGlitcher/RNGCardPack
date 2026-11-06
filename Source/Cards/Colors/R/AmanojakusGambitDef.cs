@@ -6,6 +6,7 @@ using LBoL.Core.Battle.BattleActions;
 using LBoL.Core.Cards;
 using LBoL.Core.Randoms;
 using LBoLEntitySideloader.Attributes;
+using RNGCardPack.Source.BattleActions.RandomRangeAction;
 using RNGCardPack.Source.Cards.Template;
 using System.Collections.Generic;
 
@@ -63,9 +64,11 @@ namespace RNGCardPack.Source.Cards.Colors.R
             if (base.Battle.BattleShouldEnd)
                 yield break;
 
-            int result = RNGGenericRange(RandomMinValue1, RandomMaxValue1, true);
+            var action = new RollRandomRangeAction(base.Battle.Player, RandomMinValue1, RandomMaxValue1, true, AllowOrderChaos, AllowNegativeValues);
+
+            yield return action;
                 
-            Card[] cards = base.Battle.RollCardsWithoutManaLimit(new CardWeightTable(RarityWeightTable.BattleCard, OwnerWeightTable.AllOnes, CardTypeWeightTable.CanBeLoot, false), result, (CardConfig config) => config.Id != base.Id && !config.IsXCost && config.Type != CardType.Friend);
+            Card[] cards = base.Battle.RollCardsWithoutManaLimit(new CardWeightTable(RarityWeightTable.BattleCard, OwnerWeightTable.AllOnes, CardTypeWeightTable.CanBeLoot, false), action.Args.Result, (CardConfig config) => config.Id != base.Id && !config.IsXCost && config.Type != CardType.Friend);
 
             foreach (Card card in cards)
             {

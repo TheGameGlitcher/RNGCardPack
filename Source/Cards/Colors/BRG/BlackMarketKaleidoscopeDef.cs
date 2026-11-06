@@ -10,6 +10,7 @@ using LBoL.Core.Randoms;
 using LBoL.EntityLib.JadeBoxes;
 using LBoL.EntityLib.StatusEffects.Others;
 using LBoLEntitySideloader.Attributes;
+using RNGCardPack.Source.BattleActions.RollPercentAction;
 using RNGCardPack.Source.Cards.Template;
 using RNGCardPack.Source.StatusEffects.Effects;
 using System;
@@ -43,7 +44,7 @@ namespace RNGCardPack.Source.Cards.Colors.BRG
 
             config.Value2 = 5;
 
-            config.Mana = new ManaGroup() { };
+            config.Mana = new ManaGroup() { Any = 3 };
 
             config.Keywords = Keyword.Exile;
             config.UpgradedKeywords = Keyword.Exile;
@@ -75,11 +76,8 @@ namespace RNGCardPack.Source.Cards.Colors.BRG
             BaseValue4 = 5;
             BaseUpgradedValue4 = 5;
 
-            BasePercentValue1 = 50;
-            BaseUpgradedPercentValue1 = 50;
-
-            BasePercentValue2 = 10;
-            BaseUpgradedPercentValue2 = 20;
+            BasePercentValue1 = 10;
+            BaseUpgradedPercentValue1 = 20;
         }
 
         protected override IEnumerable<BattleAction> Actions(UnitSelector selector, ManaGroup consumingMana, Interaction precondition)
@@ -87,18 +85,21 @@ namespace RNGCardPack.Source.Cards.Colors.BRG
             if (base.Battle.BattleShouldEnd)
                 yield break;
 
-            List<Card> cards = base.Battle.RollCardsWithoutManaLimit(new CardWeightTable(RarityWeightTable.OnlyRare, OwnerWeightTable.AllOnes, CardTypeWeightTable.CanBeLoot, false), Value2, null).ToList<Card>();
-            cards.AddRange(base.Battle.RollCardsWithoutManaLimit(new CardWeightTable(RarityWeightTable.OnlyUncommon, OwnerWeightTable.AllOnes, CardTypeWeightTable.CanBeLoot, false), Value2, null).ToList<Card>());
-            cards.AddRange(base.Battle.RollCardsWithoutManaLimit(new CardWeightTable(RarityWeightTable.OnlyCommon, OwnerWeightTable.AllOnes, CardTypeWeightTable.CanBeLoot, false), Value2, null).ToList<Card>());
+            List<Card> cards = base.Battle.RollCardsWithoutManaLimit(new CardWeightTable(RarityWeightTable.OnlyRare, OwnerWeightTable.AllOnes, CardTypeWeightTable.CanBeLoot, false), Value2, config => !config.IsXCost).ToList<Card>();
+            cards.AddRange(base.Battle.RollCardsWithoutManaLimit(new CardWeightTable(RarityWeightTable.OnlyUncommon, OwnerWeightTable.AllOnes, CardTypeWeightTable.CanBeLoot, false), Value2, config => !config.IsXCost).ToList<Card>());
+            cards.AddRange(base.Battle.RollCardsWithoutManaLimit(new CardWeightTable(RarityWeightTable.OnlyCommon, OwnerWeightTable.AllOnes, CardTypeWeightTable.CanBeLoot, false), Value2, config => !config.IsXCost).ToList<Card>());
 
             if (cards.Count > 0)
             {
                 foreach (Card card in cards)
                 {
-                    if (RNGGenericPercent(PercentValue1, true))
-                        card.SetTurnCost(Mana);
+                    card.SetBaseCost(ManaGroup.Anys(Math.Max(card.ConfigCost.Amount - this.Mana.Amount, 0)));
 
-                    if (RNGGenericPercent(PercentValue2, true))
+                    var action = new RollPercentAction(base.Battle.Player, PercentValue1, true);
+
+                    yield return action;
+
+                    if (action.Args.Result)
                         card.Upgrade();
                 }
             }

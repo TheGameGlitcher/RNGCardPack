@@ -8,6 +8,8 @@ using LBoL.Core.StatusEffects;
 using LBoL.Core.Units;
 using LBoL.EntityLib.StatusEffects.Basic;
 using LBoLEntitySideloader.Attributes;
+using RNGCardPack.Source.BattleActions.RandomRangeAction;
+using RNGCardPack.Source.BattleActions.RollPercentAction;
 using RNGCardPack.Source.Cards.Template;
 using System;
 using System.Collections.Generic;
@@ -54,6 +56,7 @@ namespace RNGCardPack.Source.Cards.Colors.B
         public NervePoison() : base()
         {
             IsRandom = true;
+            AllowOrderChaos = true;
 
             BaseRandomMinValue1 = 1;
             BaseRandomMaxValue1 = 3;
@@ -77,8 +80,6 @@ namespace RNGCardPack.Source.Cards.Colors.B
 
             if (this == base.Battle.EnumerateAllCards().FirstOrDefault((Card card) => card is NervePoison))
             {
-                int weakLevel = 0;
-
                 List<Card> cards = (from card in base.Battle.DrawZone
                                     where card is NervePoison
                                     select card).ToList<Card>();
@@ -87,16 +88,22 @@ namespace RNGCardPack.Source.Cards.Colors.B
 
                 foreach (RNGCardPackCard card in cards.Cast<RNGCardPackCard>())
                 {
-                    weakLevel = RNGGenericRange(RandomMinValue1, RandomMaxValue1, true);
+                    var action1 = new RollRandomRangeAction(base.Battle.Player, card.RandomMinValue1, card.RandomMaxValue1, true, card.AllowOrderChaos, card.AllowNegativeValues);
 
-                    if (RNGGenericPercent(PercentValue1, true))
+                    yield return action1;
+
+                    var action2 = new RollPercentAction(base.Battle.Player, card.PercentValue1, true);
+
+                    yield return action2;
+
+                    if (action2.Args.Result)
                     {
                         foreach (EnemyUnit enemy in base.Battle.AllAliveEnemies)
-                            yield return new ApplyStatusEffectAction<Weak>(enemy, 0, weakLevel * 2, 0, 0, 0.2f);
+                            yield return new ApplyStatusEffectAction<Weak>(enemy, 0, action1.Args.Result * 2, 0, 0, 0.2f);
                     }
 
                     else
-                        yield return new ApplyStatusEffectAction<Weak>(base.Battle.RandomAliveEnemy, 0 , weakLevel, 0, 0, 0.2f);
+                        yield return new ApplyStatusEffectAction<Weak>(base.Battle.RandomAliveEnemy, 0 , action1.Args.Result, 0, 0, 0.2f);
                 }
             }
 

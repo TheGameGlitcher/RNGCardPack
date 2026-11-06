@@ -63,7 +63,7 @@ namespace RNGCardPack.Source.Cards.Colors.B
 
             yield return new ApplyStatusEffectAction<LuckNegativeSe>(base.Battle.Player, Value1);
 
-            yield return new ApplyStatusEffectAction<PovertyGodsWrathSe>(base.Battle.Player, Value2, null, 0, null);
+            yield return new ApplyStatusEffectAction<PovertyGodsWrathSe>(base.Battle.Player, Value2);
 
             yield break;
         }

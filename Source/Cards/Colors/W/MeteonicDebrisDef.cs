@@ -10,6 +10,7 @@ using LBoL.Core.Units;
 using LBoL.EntityLib.Cards.Neutral.NoColor;
 using LBoLEntitySideloader.Attributes;
 using LBoLEntitySideloader.ExtraFunc.GunHelpers;
+using RNGCardPack.Source.BattleActions.RandomDamageAction;
 using RNGCardPack.Source.Cards.Template;
 using System;
 using System.Collections.Generic;
@@ -107,7 +108,7 @@ namespace RNGCardPack.Source.Cards.Colors.W
                 yield break;
             }
 
-            yield return RNGAttackAction(base.Battle.RandomAliveEnemy, RandomMinDamage, RandomMaxDamage, false, true);
+            yield return new RandomDamageAction(base.Battle.Player, base.Battle.RandomAliveEnemy, RandomMinDamage, RandomMaxDamage, DamageType.Attack, false, GunName, GunType.Single, true, AllowOrderChaos, AllowNegativeValues);
 
             yield return new ExileCardAction(this);
 

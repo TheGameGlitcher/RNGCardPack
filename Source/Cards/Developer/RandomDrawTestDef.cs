@@ -6,6 +6,7 @@ using LBoL.Core.Battle;
 using LBoL.Core.Battle.BattleActions;
 using LBoL.Core.Cards;
 using LBoLEntitySideloader.Attributes;
+using RNGCardPack.Source.BattleActions.RandomDrawManyCardAction;
 using RNGCardPack.Source.Cards.Template;
 using System;
 using System.Collections.Generic;
@@ -60,25 +61,7 @@ namespace RNGCardPack.Source.Cards.Developer
 
         protected override IEnumerable<BattleAction> Actions(UnitSelector selector, ManaGroup consumingMana, Interaction precondition)
         {
-
-            int result = RNGGenericRange(RandomMinValue1, RandomMaxValue1, true);
-
-            if (result < 0)
-            {
-                Card[] discard = base.Battle.HandZone.SampleMany(-result, base.BattleRng);
-
-                yield return new DiscardManyAction(discard);
-                yield break;
-            }
-
-            else if (result > 0)
-            {
-                yield return new DrawManyCardAction(result);
-                yield break;
-            }
-
-            else
-               yield break;
+            yield return new RandomDrawManyCardAction(base.Battle.Player, RandomMinValue1, RandomMaxValue1, true, AllowOrderChaos);
         }
     }
 }

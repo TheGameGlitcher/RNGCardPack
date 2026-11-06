@@ -2,8 +2,13 @@
 using LBoL.ConfigData;
 using LBoL.Core;
 using LBoL.Core.Battle;
+using LBoL.Core.Battle.BattleActions;
+using LBoL.Core.StatusEffects;
 using LBoLEntitySideloader.Attributes;
+using RNGCardPack.Source.BattleActions.EventsManager;
+using RNGCardPack.Source.BattleActions.RandomCastBlockShieldAction;
 using RNGCardPack.Source.Cards.Template;
+using RNGCardPack.Source.Structs;
 using System.Collections.Generic;
 
 namespace RNGCardPack.Source.Cards.Developer
@@ -61,8 +66,7 @@ namespace RNGCardPack.Source.Cards.Developer
 
         protected override IEnumerable<BattleAction> Actions(UnitSelector selector, ManaGroup consumingMana, Interaction precondition)
         {
-
-            yield return RNGBlockShieldAction(RandomMinBlock, RandomMaxBlock, true);
+            yield return new RandomCastBlockShieldAction(base.Battle.Player, base.Battle.Player, RandomMinBlock, RandomMaxBlock, 0, 0);
         }
     }
 }

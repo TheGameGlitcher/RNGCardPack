@@ -7,6 +7,8 @@ using LBoL.Core.Battle.BattleActions;
 using LBoL.Core.Battle.Interactions;
 using LBoL.Core.Cards;
 using LBoL.Core.Randoms;
+using LBoL.EntityLib.Cards.Character.Cirno;
+using LBoL.EntityLib.StatusEffects.Cirno;
 using LBoL.EntityLib.StatusEffects.Others;
 using LBoLEntitySideloader.Attributes;
 using RNGCardPack.Source.Cards.Template;

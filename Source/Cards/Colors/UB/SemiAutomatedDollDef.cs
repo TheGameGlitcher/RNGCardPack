@@ -9,6 +9,7 @@ using LBoL.Core.Cards;
 using LBoL.Core.Randoms;
 using LBoL.EntityLib.StatusEffects.Others;
 using LBoLEntitySideloader.Attributes;
+using RNGCardPack.Source.BattleActions.RollPercentAction;
 using RNGCardPack.Source.Cards.Template;
 using RNGCardPack.Source.StatusEffects.Effects;
 using System;
@@ -71,7 +72,11 @@ namespace RNGCardPack.Source.Cards.Colors.UB
 
         private IEnumerable<BattleAction> TransformCard(GameEventArgs args)
         {
-            Card card = Library.CreateCard((RNGGenericPercent(PercentValue1, true)) ? PhilosopherColor : GenericColors.Sample(base.BattleRng), IsUpgraded);
+            var action = new RollPercentAction(base.Battle.Player, PercentValue1, true);
+
+            yield return action;
+
+            Card card = Library.CreateCard((action.Args.Result) ? PhilosopherColor : GenericColors.Sample(base.BattleRng), IsUpgraded);
 
             yield return new TransformCardAction(this, card);
 

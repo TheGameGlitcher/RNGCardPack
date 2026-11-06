@@ -8,6 +8,7 @@ using LBoL.Core.Cards;
 using LBoL.Core.Randoms;
 using LBoL.Core.StatusEffects;
 using LBoLEntitySideloader.Attributes;
+using RNGCardPack.Source.BattleActions.RollPercentAction;
 using RNGCardPack.Source.Cards.Template;
 using System;
 using System.Collections.Generic;
@@ -80,7 +81,11 @@ namespace RNGCardPack.Source.Cards.Tools
                 {
                     foreach (Card card in array)
                     {
-                        if (RNGGenericPercent(PercentValue1, true))
+                        var action = new RollPercentAction(base.Battle.Player, PercentValue1, true);
+
+                        yield return action;
+
+                        if (action.Args.Result)
                             card.Upgrade();
                     }
 

@@ -10,6 +10,7 @@ using LBoL.Core.Randoms;
 using LBoL.EntityLib.StatusEffects.Others;
 using LBoLEntitySideloader.Attributes;
 using LBoLEntitySideloader.ExtraFunc.GunHelpers;
+using RNGCardPack.Source.BattleActions.RandomRangeAction;
 using RNGCardPack.Source.Cards.Template;
 using RNGCardPack.Source.StatusEffects.Effects;
 using System.Collections.Generic;
@@ -71,9 +72,11 @@ namespace RNGCardPack.Source.Cards.Colors.R
             if (base.Battle.BattleShouldEnd)
                 yield break;
 
-            int result = RNGGenericRange(RandomMinValue1, RandomMaxValue1, true);
+            var action = new RollRandomRangeAction(base.Battle.Player, RandomMinValue1, RandomMaxValue1, true, AllowOrderChaos, AllowNegativeValues);
 
-            for (int i = 0; i < result; i++)
+            yield return action;
+
+            for (int i = 0; i < action.Args.Result; i++)
                 yield return AttackAction(selector.SelectedEnemy);
 
             yield break;

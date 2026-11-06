@@ -7,6 +7,7 @@ using LBoL.Core.Battle.BattleActions;
 using LBoL.Core.Cards;
 using LBoL.Core.Units;
 using LBoLEntitySideloader.Attributes;
+using RNGCardPack.Source.BattleActions.RollPercentAction;
 using RNGCardPack.Source.Cards.Colors.B;
 using RNGCardPack.Source.StatusEffects.Template;
 using System;
@@ -24,6 +25,10 @@ namespace RNGCardPack.Source.StatusEffects.Effects
             StatusEffectConfig config = GetDefaultStatusEffectConfig();
 
             config.SFX = "Buff";
+
+            config.ShowPlusByLimit = true;
+
+            config.LimitStackType = StackType.Max;
 
             config.HasCount = true;
 
@@ -61,8 +66,15 @@ namespace RNGCardPack.Source.StatusEffects.Effects
 
                     React(new RemoveCardAction(targetCard));
 
-                    if (Count == 10 && RNGGenericPercentSe(PercentValue1, true))
-                        targetCard.Upgrade();
+                    if (Limit > 0)
+                    {
+                        var action = new RollPercentAction(base.Battle.Player, PercentValue1, true);
+
+                        React(action);
+
+                        if (action.Args.Result)
+                            targetCard.Upgrade();
+                    }
 
                     targetCard.IsPlayTwiceToken = true;
 
@@ -78,7 +90,11 @@ namespace RNGCardPack.Source.StatusEffects.Effects
 
             foreach (Card card in StoredCards)
             {
-                if (RNGGenericPercentSe(Count, true))
+                var action = new RollPercentAction(base.Battle.Player, Count, true);
+
+                yield return action;
+
+                if (action.Args.Result)
                 {
                     NotifyActivating();
 

@@ -8,6 +8,8 @@ using LBoL.Core.Cards;
 using LBoL.Core.Randoms;
 using LBoL.Core.StatusEffects;
 using LBoLEntitySideloader.Attributes;
+using RNGCardPack.Source.BattleActions.RandomRangeAction;
+using RNGCardPack.Source.BattleActions.RollPercentAction;
 using RNGCardPack.Source.Cards.Template;
 using RNGCardPack.Source.StatusEffects.Effects;
 using System;
@@ -81,9 +83,11 @@ namespace RNGCardPack.Source.Cards.Tools
 
             else
             {
-                int result = RNGGenericRange(RandomMinValue1, RandomMaxValue1);
+                var action1 = new RollRandomRangeAction(base.Battle.Player, RandomMinValue1, RandomMaxValue1, false, AllowOrderChaos, AllowNegativeValues);
 
-                switch (result)
+                yield return action1;
+
+                switch (action1.Args.Result)
                 {
                     case 1:
                         Card[] randomCardArray = base.Battle.RollCardsWithoutManaLimit(new CardWeightTable(RarityWeightTable.OnlyRare, OwnerWeightTable.AllOnes, CardTypeWeightTable.CanBeLoot, false), Value1, (CardConfig config) => config.Id != "D100");
@@ -96,7 +100,11 @@ namespace RNGCardPack.Source.Cards.Tools
                         break;
 
                     case 2:
-                        Card diceCard = Library.CreateCard(DiceCards[(RNGGenericRange(0, DiceCards.Count - 1))]);
+                        var action2 = new RollRandomRangeAction(base.Battle.Player, 0, DiceCards.Count - 1, false, false, false);
+
+                        yield return action2;
+
+                        Card diceCard = Library.CreateCard(DiceCards[action2.Args.Result]);
 
                         diceCard.IsPlayTwiceToken = true;
                         yield return new PlayCardAction(diceCard);
@@ -131,7 +139,7 @@ namespace RNGCardPack.Source.Cards.Tools
                         break;
 
                     default:
-                        throw new ArgumentOutOfRangeException(nameof(result), result, $"Result was set to an invalid value. Check the input variables for {nameof(RNGGenericRange)}.");
+                        throw new ArgumentOutOfRangeException(nameof(action1.Args.Result), $"Parameter was set to an invalid value. Must be between 1 and 9.");
                 }
             }
         }

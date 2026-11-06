@@ -10,6 +10,7 @@ using LBoLEntitySideloader.CustomKeywords;
 using RNGCardPack.Source.Cards.Tools;
 using RNGCardPack.Source.Keywords;
 using RNGCardPack.Source.StatusEffects.Effects;
+using RNGCardPack.Source.Structs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -82,7 +83,7 @@ namespace RNGCardPack.Source.Cards.Template
         {
             get
             {
-                if (!((double)(RandomMaxDamage.Amount + (float)Battle.Player.TotalFirepower) - ChaosLevel > (double)BaseRandomMaxDamage * 1.5) && !IsUpgraded)
+                if (!((double)(RandomMaxDamage + (float)Battle.Player.TotalFirepower) - ChaosLevel > (double)BaseRandomMaxDamage * 1.5) && !IsUpgraded)
                     return Battle.Player.HasStatusEffect<Burst>();
 
                 return true;
@@ -290,145 +291,86 @@ namespace RNGCardPack.Source.Cards.Template
 
         protected virtual int BaseRandomMinDamage { get; set; } = 0;
         protected virtual int BaseUpgradedRandomMinDamage { get; set; } = 0;
-        public DamageInfo RandomMinDamage
+        public int RandomMinDamage
         {
             get
             {
-                DamageInfo finalDamage = DamageInfo.Attack((IsUpgraded) ? BaseUpgradedRandomMinDamage : BaseRandomMinDamage);
-
-                finalDamage.Damage -= ChaosLevel;
-
-                if (finalDamage.Damage >= MedianDamage)
-                    finalDamage.Damage = MedianDamage;
-
-                if (finalDamage.Damage < 0)
-                    finalDamage.Damage = 0;
-
-                return finalDamage;
+                return (IsUpgraded) ? BaseUpgradedRandomMinDamage : BaseRandomMinDamage;
             }
+
         }
 
         protected virtual int BaseRandomMaxDamage { get; set; } = 0;
         protected virtual int BaseUpgradedRandomMaxDamage { get; set; } = 0;
-        public DamageInfo RandomMaxDamage
+        public int RandomMaxDamage
         {
             get
             {
-                DamageInfo finalDamage = DamageInfo.Attack((IsUpgraded) ? BaseUpgradedRandomMaxDamage : BaseRandomMaxDamage);
-
-                finalDamage.Damage += ChaosLevel;
-
-                if (finalDamage.Damage <= MedianDamage)
-                    finalDamage.Damage = MedianDamage;
-
-                return finalDamage;
+                return (IsUpgraded) ? BaseUpgradedRandomMaxDamage : BaseRandomMaxDamage;
             }
         }
 
-        public int MedianDamage
+        public DamageRangeInfo DamageRange
         {
             get
             {
-                 return (int)Math.Round(
-                     (((IsUpgraded) ? (float)BaseUpgradedRandomMinDamage : (float)BaseRandomMinDamage) +
-                     ((IsUpgraded) ? (float)BaseUpgradedRandomMaxDamage : (float)BaseRandomMaxDamage)) /
-                     2);
+                return new DamageRangeInfo(RandomMinDamage, RandomMaxDamage, DamageType.Attack, false).Shift(ChaosLevel, AllowNegativeValues);
             }
         }
 
         protected virtual int BaseRandomMinBlock { get; set; } = 0;
         protected virtual int BaseUpgradedRandomMinBlock { get; set; } = 0;
-        public BlockInfo RandomMinBlock
+        public int RandomMinBlock
         {
             get
             {
-                BlockInfo finalBlock = new BlockInfo((IsUpgraded) ? BaseUpgradedRandomMinBlock : BaseRandomMinBlock);
-
-                finalBlock.Block -= ChaosLevel;
-
-                if (finalBlock.Block >= MedianBlock)
-                    finalBlock.Block = MedianBlock;
-
-                if (finalBlock.Block < 0)
-                    finalBlock.Block = 0;
-
-                return finalBlock;
+                return (IsUpgraded) ? BaseUpgradedRandomMinBlock : BaseRandomMinBlock;
             }
         }
 
         protected virtual int BaseRandomMaxBlock { get; set; } = 0;
         protected virtual int BaseUpgradedRandomMaxBlock { get; set; } = 0;
-        public BlockInfo RandomMaxBlock
+        public int RandomMaxBlock
         {
             get
             {
-                BlockInfo finalBlock = new BlockInfo((IsUpgraded) ? BaseUpgradedRandomMaxBlock : BaseRandomMaxBlock);
-
-                finalBlock.Block += ChaosLevel;
-
-                if (finalBlock.Block <= MedianBlock)
-                    finalBlock.Block = MedianBlock;
-
-                return finalBlock;
+                return (IsUpgraded) ? BaseUpgradedRandomMaxBlock : BaseRandomMaxBlock;
             }
         }
 
-        public int MedianBlock
+        public BlockRangeInfo BlockRange
         {
             get
             {
-                return (int)Math.Round(
-                    (((IsUpgraded) ? (float)BaseUpgradedRandomMinBlock : (float)BaseRandomMinBlock) +
-                    ((IsUpgraded) ? (float)BaseUpgradedRandomMaxBlock : (float)BaseRandomMaxBlock)) /
-                    2);
+                return new BlockRangeInfo(RandomMinBlock, RandomMaxBlock, BlockShieldType.Normal).Shift(ChaosLevel, AllowNegativeValues);
             }
         }
 
         protected virtual int BaseRandomMinShield { get; set; } = 0;
         protected virtual int BaseUpgradedRandomMinShield { get; set; } = 0;
-        public ShieldInfo RandomMinShield
+        public int RandomMinShield
         {
             get
             {
-                ShieldInfo finalShield = new ShieldInfo((IsUpgraded) ? BaseUpgradedRandomMinShield : BaseRandomMinShield);
-
-                finalShield.Shield -= ChaosLevel;
-
-                if (finalShield.Shield >= MedianShield)
-                    finalShield.Shield = MedianShield;
-
-                if (finalShield.Shield < 0)
-                    finalShield.Shield = 0;
-
-                return finalShield;
+                return (IsUpgraded) ? BaseUpgradedRandomMinShield : BaseRandomMinShield;
             }
         }
 
         protected virtual int BaseRandomMaxShield { get; set; } = 0;
         protected virtual int BaseUpgradedRandomMaxShield { get; set; } = 0;
-        public ShieldInfo RandomMaxShield
+        public int RandomMaxShield
         {
             get
             {
-                ShieldInfo finalShield = new ShieldInfo((IsUpgraded) ? BaseUpgradedRandomMaxShield : BaseRandomMaxShield);
-
-                finalShield.Shield += ChaosLevel;
-
-                if (finalShield.Shield <= MedianShield)
-                    finalShield.Shield = MedianShield;
-
-                return finalShield;
+                return (IsUpgraded) ? BaseUpgradedRandomMaxShield : BaseRandomMaxShield;
             }
         }
 
-        public int MedianShield
+        public ShieldRangeInfo ShieldRange
         {
             get
             {
-                return (int)Math.Round(
-                    (((IsUpgraded) ? (float)BaseUpgradedRandomMinShield : (float)BaseRandomMinShield) +
-                    ((IsUpgraded) ? (float)BaseUpgradedRandomMaxShield : (float)BaseRandomMaxShield)) /
-                    2);
+                return new ShieldRangeInfo(RandomMinShield, RandomMaxShield, BlockShieldType.Normal).Shift(ChaosLevel, AllowNegativeValues);
             }
         }
 
@@ -438,23 +380,7 @@ namespace RNGCardPack.Source.Cards.Template
         {
             get
             {
-                int finalValue =  (IsUpgraded) ? BaseUpgradedRandomMinValue1 : BaseRandomMinValue1;
-
-                finalValue -= ChaosLevel;
-                
-                if (finalValue >= MedianValue1)
-                    finalValue = MedianValue1;
-
-                if (AllowNegativeValues)
-                    return finalValue;
-
-                else
-                {
-                    if (finalValue < 0)
-                        finalValue = 0;
-
-                    return finalValue;
-                }
+                return (IsUpgraded) ? BaseUpgradedRandomMinValue1 : BaseRandomMinValue1;
             }
         }
 
@@ -464,34 +390,15 @@ namespace RNGCardPack.Source.Cards.Template
         {
             get
             {
-                int finalValue = (IsUpgraded) ? BaseUpgradedRandomMaxValue1 : BaseRandomMaxValue1;
-
-                finalValue += ChaosLevel;
-
-                if (finalValue <= MedianValue1)
-                    finalValue = MedianValue1;
-
-                if (AllowNegativeValues)
-                    return finalValue;
-
-                else
-                {
-                    if (finalValue < 0)
-                        finalValue = 0;
-
-                    return finalValue;
-                }
+                return (IsUpgraded) ? BaseUpgradedRandomMaxValue1 : BaseRandomMaxValue1;
             }
         }
 
-        public int MedianValue1
+        public GenericRangeInfo ValueRange1
         {
             get
             {
-                return (int)Math.Round(
-                    (((IsUpgraded) ? (float)BaseUpgradedRandomMinValue1 : (float)BaseRandomMinValue1) +
-                    ((IsUpgraded) ? (float)BaseUpgradedRandomMaxValue1 : (float)BaseRandomMaxValue1)) /
-                    2);
+                return new GenericRangeInfo(RandomMinValue1, RandomMaxValue1).Shift(ChaosLevel, AllowNegativeValues);
             }
         }
 
@@ -501,23 +408,7 @@ namespace RNGCardPack.Source.Cards.Template
         {
             get
             {
-                int finalValue = (IsUpgraded) ? BaseUpgradedRandomMinValue2 : BaseRandomMinValue2;
-
-                finalValue -= ChaosLevel;
-
-                if (finalValue >= MedianValue2)
-                    finalValue = MedianValue2;
-
-                if (AllowNegativeValues)
-                    return finalValue;
-
-                else
-                {
-                    if (finalValue < 0)
-                        finalValue = 0;
-
-                    return finalValue;
-                }
+                return (IsUpgraded) ? BaseUpgradedRandomMinValue2 : BaseRandomMinValue2;
             }
         }
 
@@ -527,34 +418,15 @@ namespace RNGCardPack.Source.Cards.Template
         {
             get
             {
-                int finalValue = (IsUpgraded) ? BaseUpgradedRandomMaxValue2 : BaseRandomMaxValue2;
-
-                finalValue += ChaosLevel;
-
-                if (finalValue <= MedianValue2)
-                    finalValue = MedianValue2;
-
-                if (AllowNegativeValues)
-                    return finalValue;
-
-                else
-                {
-                    if (finalValue < 0)
-                        finalValue = 0;
-
-                    return finalValue;
-                }
+                return (IsUpgraded) ? BaseUpgradedRandomMaxValue2 : BaseRandomMaxValue2;
             }
         }
 
-        public int MedianValue2
+        public GenericRangeInfo ValueRange2
         {
             get
             {
-                return (int)Math.Round(
-                    (((IsUpgraded) ? (float)BaseUpgradedRandomMinValue2 : (float)BaseRandomMinValue2) +
-                    ((IsUpgraded) ? (float)BaseUpgradedRandomMaxValue2 : (float)BaseRandomMaxValue2)) /
-                    2);
+                return new GenericRangeInfo(RandomMinValue2, RandomMaxValue2).Shift(ChaosLevel, AllowNegativeValues);
             }
         }
 
@@ -595,248 +467,6 @@ namespace RNGCardPack.Source.Cards.Template
 
             else
                 IsRandom = false;
-        }
-
-        public void NotifyPercentRollFailed()
-        {
-            PercentRollFailed?.Invoke(this, EventArgs.Empty);
-        }
-
-        public void NotifyPercentRollSucceeded()
-        {
-            PercentRollSucceeded?.Invoke(this, EventArgs.Empty);
-        }
-
-        protected BattleAction RNGAttackAction(Unit target, DamageInfo RNGMin, DamageInfo RNGMax, bool isAccurate = false, bool allowLuck = false)
-        {
-            int result = base.GameRun.BattleCardRng.NextInt((int)RNGMin.Amount, (int)RNGMax.Amount);
-
-            if (allowLuck && LuckLevel != 0)
-            {
-                if (LuckLevel > 0)
-                {
-                    for (int rolls = 0; rolls < LuckLevel; rolls++)
-                    {
-                        if (result >= RNGMax.Amount / 2)
-                            break;
-
-                        else
-                            result = base.GameRun.BattleCardRng.NextInt((int)RNGMin.Amount, (int)RNGMax.Amount);
-                    }
-                }
-
-                else
-                {
-                    for (int rolls = 0; rolls < -(LuckLevel); rolls++)
-                    {
-                        if (result <= RNGMax.Amount / 2)
-                            break;
-
-                        else
-                            result = base.GameRun.BattleCardRng.NextInt((int)RNGMin.Amount, (int)RNGMax.Amount);
-                    }
-                }
-            }
-
-            DamageInfo damage = DamageInfo.Attack(result, isAccurate);
-
-            return new DamageAction(base.Battle.Player, target, damage, RNGGunName);
-        }
-
-        protected BattleAction RNGAttackAction(IEnumerable<Unit> targets, DamageInfo RNGMin, DamageInfo RNGMax, bool isAccurate = false, bool allowLuck = false)
-        {
-            int result = base.GameRun.BattleCardRng.NextInt((int)RNGMin.Amount, (int)RNGMax.Amount);
-
-            if (allowLuck && LuckLevel != 0)
-            {
-                if (LuckLevel > 0)
-                {
-                    for (int rolls = 0; rolls < LuckLevel; rolls++)
-                    {
-                        if (result >= RNGMax.Amount / 2)
-                            break;
-
-                        else
-                            result = base.GameRun.BattleCardRng.NextInt((int)RNGMin.Amount, (int)RNGMax.Amount);
-                    }
-                }
-
-                else
-                {
-                    for (int rolls = 0; rolls < -(LuckLevel); rolls++)
-                    {
-                        if (result <= RNGMax.Amount / 2)
-                            break;
-
-                        else
-                            result = base.GameRun.BattleCardRng.NextInt((int)RNGMin.Amount, (int)RNGMax.Amount);
-                    }
-                }
-            }
-
-            DamageInfo damage = DamageInfo.Attack(result, isAccurate);
-
-            return new DamageAction(base.Battle.Player, targets, damage, RNGGunName);
-        }
-
-        protected BattleAction RNGBlockShieldAction( BlockInfo RNGMin, BlockInfo RNGMax, bool allowLuck = false)
-        {
-            int result = base.GameRun.BattleCardRng.NextInt(RNGMin.Block, RNGMax.Block);
-
-            if (allowLuck && LuckLevel != 0)
-            {
-                if (LuckLevel > 0)
-                {
-                    for (int rolls = 0; rolls < LuckLevel; rolls++)
-                    {
-                        if (result >= RNGMax.Block / 2)
-                            break;
-
-                        else
-                            result = base.GameRun.BattleCardRng.NextInt((int)RNGMin.Block, (int)RNGMax.Block);
-                    }
-                }
-
-                else
-                {
-                    for (int rolls = 0; rolls < -(LuckLevel); rolls++)
-                    {
-                        if (result <= RNGMax.Block / 2)
-                            break;
-
-                        else
-                            result = base.GameRun.BattleCardRng.NextInt((int)RNGMin.Block, (int)RNGMax.Block);
-                    }
-                }
-            }
-
-            return DefenseAction(result, 0);
-        }
-
-        protected BattleAction RNGBlockShieldAction(ShieldInfo RNGMin, ShieldInfo RNGMax, bool allowLuck = false)
-        {
-            int result = base.GameRun.BattleCardRng.NextInt(RNGMin.Shield, RNGMax.Shield);
-
-            if (allowLuck && LuckLevel != 0)
-            {
-                if (LuckLevel > 0)
-                {
-                    for (int rolls = 0; rolls < LuckLevel; rolls++)
-                    {
-                        if (result >= RNGMax.Shield / 2)
-                            break;
-
-                        else
-                            result = base.GameRun.BattleCardRng.NextInt((int)RNGMin.Shield, (int)RNGMax.Shield);
-                    }
-                }
-
-                else
-                {
-                    for (int rolls = 0; rolls < -(LuckLevel); rolls++)
-                    {
-                        if (result <= RNGMax.Shield / 2)
-                            break;
-
-                        else
-                            result = base.GameRun.BattleCardRng.NextInt((int)RNGMin.Shield, (int)RNGMax.Shield);
-                    }
-                }
-            }
-
-            return DefenseAction(0, result);
-        }
-
-        protected int RNGGenericRange(int RNGMin, int RNGMax, bool allowLuck = false)
-        {
-            int result = base.GameRun.BattleCardRng.NextInt(RNGMin, RNGMax);
-
-            if (allowLuck && LuckLevel != 0)
-            {
-                if (LuckLevel > 0)
-                {
-                    for (int rolls = 0; rolls < LuckLevel; rolls++)
-                    {
-                        if (result >= RNGMax / 2)
-                            break;
-
-                        else
-                            result = base.GameRun.BattleCardRng.NextInt(RNGMin, RNGMax);
-                    }
-                }
-
-                else
-                {
-                    for (int rolls = 0; rolls < -(LuckLevel); rolls++)
-                    {
-                        if (result <= RNGMax / 2)
-                            break;
-
-                        else
-                            result = base.GameRun.BattleCardRng.NextInt(RNGMin, RNGMax);
-                    }
-                }
-            }
-
-            return result;
-        }
-
-        protected bool RNGGenericPercent(int percentValue, bool allowLuck = false, bool allowEvents = true)
-        {
-            int result = base.GameRun.BattleCardRng.NextInt(1, 100);
-
-            if (allowLuck && LuckLevel != 0)
-            {
-                if (LuckLevel > 0)
-                {
-                    for (int rolls = 0; rolls < LuckLevel; rolls++)
-                    {
-                        if (result <= percentValue)
-                        {
-                            if (allowEvents)
-                                NotifyPercentRollSucceeded();
-
-                            return true;
-                        }
-
-                        else
-                            result = base.GameRun.BattleCardRng.NextInt(1, 100);
-                    }
-                }
-
-                else
-                {
-                    for (int rolls = 0; rolls < -(LuckLevel); rolls++)
-                    {
-                        if (result > percentValue)
-                        {
-                            if (allowEvents) 
-                                NotifyPercentRollFailed();
-
-                            return false;
-                        }
-
-                        else
-                            result = base.GameRun.BattleCardRng.NextInt(1, 100);
-                    }
-                }
-            }
-
-            if (result <= percentValue)
-            {
-                if (allowEvents)
-                    NotifyPercentRollSucceeded();
-
-                return true;
-            }
-
-            else
-            {
-                if (allowEvents)
-                    NotifyPercentRollFailed();
-
-                return false;
-            }
         }
     }
 }

@@ -86,7 +86,7 @@ namespace RNGCardPack.Source.Cards.Colors.B
 
                 yield return new ExileManyCardAction(list);
 
-                yield return BuffAction<SpacetimeSeamSe>(level, 0, 0, (upgradedList.Count > 0) ? BaseUpgradedPercentValue1 : BasePercentValue1);
+                yield return BuffAction<SpacetimeSeamSe>(level, 0, (upgradedList.Count > 0) ? 1 : 0, (upgradedList.Count > 0) ? BaseUpgradedPercentValue1 : BasePercentValue1);
             }
 
             yield break;

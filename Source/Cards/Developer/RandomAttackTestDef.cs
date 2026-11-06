@@ -2,7 +2,9 @@
 using LBoL.ConfigData;
 using LBoL.Core;
 using LBoL.Core.Battle;
+using LBoL.Core.Cards;
 using LBoLEntitySideloader.Attributes;
+using RNGCardPack.Source.BattleActions.RandomDamageAction;
 using RNGCardPack.Source.Cards.Template;
 using System.Collections.Generic;
 
@@ -56,8 +58,7 @@ namespace RNGCardPack.Source.Cards.Developer
 
         protected override IEnumerable<BattleAction> Actions(UnitSelector selector, ManaGroup consumingMana, Interaction precondition)
         {
-
-            yield return RNGAttackAction(selector.GetEnemy(Battle), RandomMinDamage, RandomMaxDamage, false, true);
+            yield return new RandomDamageAction(base.Battle.Player, selector.SelectedEnemy, RandomMinDamage, RandomMaxDamage, DamageType.Attack, false, RNGGunName, GunType.Single, true, AllowOrderChaos, AllowNegativeValues);
         }
     }
 }

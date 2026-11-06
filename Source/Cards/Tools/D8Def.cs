@@ -7,6 +7,7 @@ using LBoL.Core.Battle.BattleActions;
 using LBoL.Core.Cards;
 using LBoL.Core.StatusEffects;
 using LBoLEntitySideloader.Attributes;
+using RNGCardPack.Source.BattleActions.ApplyStatusEffectRangeAction;
 using RNGCardPack.Source.Cards.Template;
 using System;
 using System.Collections.Generic;
@@ -72,37 +73,11 @@ namespace RNGCardPack.Source.Cards.Tools
             if (base.Battle.BattleShouldEnd)
                 yield break;
 
-            else
-            {
-                int result = RNGGenericRange(RandomMinValue1, RandomMaxValue1, true);
+            yield return new RandomApplyStatusEffectAction(typeof(Firepower), base.Battle.Player, RandomMinValue1, RandomMaxValue1, null, null, null, null, null, null, true, 0.2f, true, AllowOrderChaos, AllowNegativeValues);
 
-                if (result < 0)
-                {
-                    yield return DebuffAction<FirepowerNegative>(base.Battle.Player, -result);
-                }
+            yield return new RandomApplyStatusEffectAction(typeof(Spirit), base.Battle.Player, RandomMinValue2, RandomMaxValue2, null, null, null, null, null, null, true, 0.2f, true, AllowOrderChaos, AllowNegativeValues);
 
-                else if (result > 0)
-                {
-                    yield return BuffAction<Firepower>(result);
-                }
-
-                result = RNGGenericRange(RandomMinValue1, RandomMaxValue1, true);
-
-                if (result < 0)
-                {
-                    yield return DebuffAction<SpiritNegative>(base.Battle.Player, -result);
-                    yield break;
-                }
-
-                else if (result > 0)
-                {
-                    yield return BuffAction<Spirit>(result);
-                    yield break;
-                }
-
-                else
-                    yield break;
-            }
+            yield break;
         }
     }
 }

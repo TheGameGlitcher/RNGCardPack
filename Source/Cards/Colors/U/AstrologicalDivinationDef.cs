@@ -91,14 +91,14 @@ namespace RNGCardPack.Source.Cards.Colors.G
 
                         substituteConfig.Rarity = card.Config.Rarity;
                         substituteConfig.Type = card.Config.Type;
-                        unknownCard.IncreaseBaseCost(hiddenGenericCost);
+                        unknownCard.SetBaseCost(hiddenGenericCost);
                         break;
 
                     case 3:
                         substituteConfig.Rarity = card.Config.Rarity;
                         substituteConfig.Type = card.Config.Type;
                         substituteConfig.Colors = card.Config.Colors;
-                        unknownCard.IncreaseBaseCost(card.Config.Cost);
+                        unknownCard.SetBaseCost(card.Config.Cost);
                         break;
                 }
 

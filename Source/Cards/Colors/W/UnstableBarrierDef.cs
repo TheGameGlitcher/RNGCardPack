@@ -9,6 +9,9 @@ using LBoL.Core.Cards;
 using LBoL.Core.Randoms;
 using LBoL.EntityLib.StatusEffects.Others;
 using LBoLEntitySideloader.Attributes;
+using RNGCardPack.Source.BattleActions.RandomCastBlockShieldAction;
+using RNGCardPack.Source.BattleActions.RandomRangeAction;
+using RNGCardPack.Source.BattleActions.RollPercentAction;
 using RNGCardPack.Source.Cards.Template;
 using RNGCardPack.Source.StatusEffects.Effects;
 using System.Collections.Generic;
@@ -74,15 +77,29 @@ namespace RNGCardPack.Source.Cards.Colors.W
             if (base.Battle.BattleShouldEnd)
                 yield break;
 
-            if (IsUpgraded && RNGGenericPercent(PercentValue1, true))
+            if (IsUpgraded)
             {
-                int blockResult = RNGGenericRange(RandomMinBlock.Block, RandomMaxBlock.Block, true);
+                var percentRoll = new RollPercentAction(base.Battle.Player, PercentValue1, true);
 
-                yield return new CastBlockShieldAction(base.Battle.Player, blockResult / 2, blockResult / 2);
+                yield return percentRoll;
+
+                if (percentRoll.Args.Result)
+                {
+                    var rangeRoll = new RollRandomRangeAction(base.Battle.Player, RandomMinBlock, RandomMaxBlock, true, AllowOrderChaos, AllowNegativeValues);
+
+                    yield return rangeRoll;
+
+                    int blockResult = rangeRoll.Args.Result;
+
+                    yield return new CastBlockShieldAction(base.Battle.Player, blockResult / 2, blockResult / 2);
+                }
+
+                else
+                    yield return new RandomCastBlockShieldAction(base.Battle.Player, base.Battle.Player, RandomMinBlock, RandomMaxBlock, 0, 0, true, AllowOrderChaos, AllowNegativeValues);
             }
 
             else
-                yield return RNGBlockShieldAction(RandomMinBlock, RandomMaxBlock, true);
+                yield return new RandomCastBlockShieldAction(base.Battle.Player, base.Battle.Player, RandomMinBlock, RandomMaxBlock, 0, 0, true, AllowOrderChaos, AllowNegativeValues);
 
             yield break;
         }

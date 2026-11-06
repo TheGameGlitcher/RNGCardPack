@@ -9,6 +9,8 @@ using LBoL.Core.Cards;
 using LBoL.Core.Randoms;
 using LBoL.EntityLib.StatusEffects.Others;
 using LBoLEntitySideloader.Attributes;
+using RNGCardPack.Source.BattleActions.RandomRangeAction;
+using RNGCardPack.Source.BattleActions.RollPercentAction;
 using RNGCardPack.Source.Cards.Template;
 using RNGCardPack.Source.StatusEffects.Effects;
 using System.Collections.Generic;
@@ -73,13 +75,25 @@ namespace RNGCardPack.Source.Cards.Colors.G
             if (base.Battle.BattleShouldEnd)
                 yield break;
 
-            int result = RNGGenericRange(RandomMinValue1, RandomMaxValue1, true);
+            var action1 = new RollRandomRangeAction(base.Battle.Player, RandomMinValue1, RandomMaxValue1, true, AllowOrderChaos, AllowNegativeValues);
+
+            yield return action1;
+
+
             ManaGroup finalMana = ManaGroup.Empty;
 
-            for (int i = 0; i < result; i++)
+            for (int i = 0; i < action1.Args.Result; i++)
             {
-                if (IsUpgraded && RNGGenericPercent(PercentValue1, true))
-                    finalMana += ManaGroup.Single(ManaColor.Philosophy);
+
+                if (IsUpgraded)
+                {
+                    var action2 = new RollPercentAction(base.Battle.Player, PercentValue1, true);
+
+                    yield return action2;
+
+                    if (action2.Args.Result)
+                        finalMana += ManaGroup.Single(ManaColor.Philosophy);
+                }
 
                 else
                     finalMana += ManaGroup.Single(ManaColors.Colors.Sample(base.GameRun.BattleRng));

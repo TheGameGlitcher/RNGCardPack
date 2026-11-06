@@ -10,6 +10,8 @@ using LBoL.Core.Randoms;
 using LBoL.Core.StatusEffects;
 using LBoL.EntityLib.StatusEffects.Others;
 using LBoLEntitySideloader.Attributes;
+using RNGCardPack.Source.BattleActions.RandomCastBlockShieldAction;
+using RNGCardPack.Source.BattleActions.RollPercentAction;
 using RNGCardPack.Source.Cards.Template;
 using RNGCardPack.Source.StatusEffects.Effects;
 using System;
@@ -67,6 +69,7 @@ namespace RNGCardPack.Source.Cards.Colors.W
         public SemiAutomatedDollW() : base()
         {
             IsRandom = true;
+            AllowOrderChaos = true;
 
             BaseRandomMinShield = 5;
             BaseRandomMaxShield = 15;
@@ -91,7 +94,11 @@ namespace RNGCardPack.Source.Cards.Colors.W
 
         private IEnumerable<BattleAction> TransformCard(GameEventArgs args)
         {
-            Card card = Library.CreateCard((RNGGenericPercent(PercentValue1, true, true)) ? PhilosopherColor : GenericColors.Sample(base.BattleRng), IsUpgraded);
+            var action = new RollPercentAction(base.Battle.Player, PercentValue1, true);
+
+            yield return action;
+
+            Card card = Library.CreateCard((action.Args.Result) ? PhilosopherColor : GenericColors.Sample(base.BattleRng), IsUpgraded);
 
             yield return new TransformCardAction(this, card);
 
@@ -100,17 +107,17 @@ namespace RNGCardPack.Source.Cards.Colors.W
 
         private void OnDamageRecieving(DamageEventArgs args)
         {
-            if (base.Battle.HandZone.Contains(this) && args.Cause != ActionCause.OnlyCalculate && base.Battle.AllAliveEnemies.Contains(args.Source))
+            if (base.Battle.HandZone.Contains(this) && args.Cause != ActionCause.OnlyCalculate && args.DamageInfo.DamageType == DamageType.Attack && base.Battle.AllAliveEnemies.Contains(args.Source))
             {
                 this.NotifyActivating();
 
-                React(RNGBlockShieldAction(RandomMinShield, RandomMaxShield, true));
+                React(new RandomCastBlockShieldAction(base.Battle.Player, base.Battle.Player, 0, 0, RandomMinShield, RandomMaxShield, true, AllowOrderChaos, AllowNegativeValues));
             }
         }
 
         public override IEnumerable<BattleAction> OnTurnEndingInHand()
         {
-            if (base.Battle.BattleShouldEnd && !RNGGenericPercent(PercentValue2, true, true))
+            if (base.Battle.BattleShouldEnd)
                 return null;
 
             return TurnEndingActions();
@@ -118,6 +125,13 @@ namespace RNGCardPack.Source.Cards.Colors.W
 
         private IEnumerable<BattleAction> TurnEndingActions()
         {
+            var action = new RollPercentAction(base.Battle.Player, PercentValue2, true);
+
+            yield return action;
+
+            if (!action.Args.Result)
+                yield break;
+
             List<Card> cards = (from hand in base.Battle.HandZone
                                 where hand.CanUpgradeAndPositive
                                 select hand).ToList<Card>();

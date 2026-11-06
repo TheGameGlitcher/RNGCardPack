@@ -9,6 +9,7 @@ using LBoL.Core.Cards;
 using LBoL.Core.Randoms;
 using LBoL.EntityLib.StatusEffects.Others;
 using LBoLEntitySideloader.Attributes;
+using RNGCardPack.Source.BattleActions.RandomRangeAction;
 using RNGCardPack.Source.Cards.Template;
 using RNGCardPack.Source.StatusEffects.Effects;
 using System.Collections.Generic;
@@ -56,6 +57,7 @@ namespace RNGCardPack.Source.Cards.Colors.WU
         public CirnosPlan() : base()
         {
             IsRandom = true;
+            AllowOrderChaos = true;
 
             BaseRandomMinValue1 = 2;
             BaseRandomMaxValue1 = 4;
@@ -79,7 +81,11 @@ namespace RNGCardPack.Source.Cards.Colors.WU
             if (card.Cost.Total <= 0)
                 yield break;
 
-            int barrier = card.Cost.Total * RNGGenericRange(RandomMinValue1, RandomMaxValue1, true);
+            var action = new RollRandomRangeAction(base.Battle.Player, RandomMinValue1, RandomMaxValue1, true, AllowOrderChaos, AllowNegativeValues);
+
+            yield return action;
+
+            int barrier = card.Cost.Total * action.Args.Result;
 
             yield return new CastBlockShieldAction(base.Battle.Player, 0, barrier);
 

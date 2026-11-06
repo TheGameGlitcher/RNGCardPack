@@ -9,6 +9,7 @@ using LBoL.Core.Cards;
 using LBoL.Core.Randoms;
 using LBoL.EntityLib.StatusEffects.Others;
 using LBoLEntitySideloader.Attributes;
+using RNGCardPack.Source.BattleActions.ApplyStatusEffectRangeAction;
 using RNGCardPack.Source.Cards.Template;
 using RNGCardPack.Source.StatusEffects.Effects;
 using System.Collections.Generic;
@@ -65,9 +66,7 @@ namespace RNGCardPack.Source.Cards.Colors.B
             if (base.Battle.BattleShouldEnd)
                 yield break;
 
-            int result = RNGGenericRange(RandomMinValue1, RandomMaxValue1, true);
-
-            yield return DebuffAction<Poison>(selector.SelectedEnemy, result);
+            yield return new RandomApplyStatusEffectAction(typeof(Poison), selector.SelectedEnemy, RandomMinValue1, RandomMaxValue1, null, null, null, null, null, null, true, 0.2f, true, AllowOrderChaos, AllowNegativeValues);
 
             yield break;
         }

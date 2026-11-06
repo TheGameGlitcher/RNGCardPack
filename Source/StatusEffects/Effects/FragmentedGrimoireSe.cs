@@ -28,9 +28,13 @@ namespace RNGCardPack.Source.StatusEffects.Effects
         {
             StatusEffectConfig config = GetDefaultStatusEffectConfig();
 
-            config.LevelStackType = StackType.Keep;
+            config.LevelStackType = StackType.Max;
 
-            config.CountStackType = StackType.Keep;
+            config.ShowPlusByLimit = true;
+
+            config.LimitStackType = StackType.Max;
+
+            config.CountStackType = StackType.Max;
 
             config.HasCount = true;
 
@@ -43,14 +47,9 @@ namespace RNGCardPack.Source.StatusEffects.Effects
     [EntityLogic(typeof(FragmentedGrimoireSeDef))]
     public sealed class FragmentedGrimoireSe : RNGCardPackStatusEffect
     {
-        public FragmentedGrimoireSe() : base()
-        {
-            PercentValue1 = 10;
-        }
-
         protected override string GetBaseDescription()
         {
-            if (Level == 3)
+            if (Limit > 0)
                 return ExtraDescription;
 
             else
@@ -82,11 +81,11 @@ namespace RNGCardPack.Source.StatusEffects.Effects
                 substituteConfig.Colors = card.Config.Colors;
                 substituteConfig.Cost = card.Config.Cost;
 
-                if (Level == 3)
+                if (Limit > 0)
                     substituteConfig.Rarity = card.Config.Rarity;
 
                 unknownCard.Config = substituteConfig;
-                unknownCard.IncreaseBaseCost(unknownCard.Config.Cost);
+                unknownCard.SetBaseCost(unknownCard.Config.Cost);
 
                 unknownCards.Add(unknownCard);
             }

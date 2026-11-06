@@ -9,6 +9,7 @@ using LBoL.Core.Units;
 using LBoL.Presentation;
 using LBoLEntitySideloader.Attributes;
 using LBoLEntitySideloader.Utils;
+using RNGCardPack.Source.BattleActions.RollPercentAction;
 using RNGCardPack.Source.Patches;
 using RNGCardPack.Source.StatusEffects.Template;
 using System;
@@ -34,6 +35,11 @@ namespace RNGCardPack.Source.StatusEffects.Effects
     [EntityLogic(typeof(WhiteRabbitLuckSeDef))]
     public sealed class WhiteRabbitLuckSe : RNGCardPackStatusEffect
     {
+        public WhiteRabbitLuckSe() : base()
+        {
+            PercentValue1 = 20;
+        }
+
         protected override void OnAdded(Unit unit)
         {
             if (!(unit is PlayerUnit))
@@ -46,7 +52,7 @@ namespace RNGCardPack.Source.StatusEffects.Effects
         {
             Card finalCard;
 
-            List <Card> cardList = (from card in base.Battle.HandZone.Concat(base.Battle.DrawZoneToShow).Concat(base.Battle.DiscardZone).Concat(base.Battle.ExileZone)
+            List <Card> cardList = (from card in base.Battle.HandZone.Concat(base.Battle.DrawZoneToShow).Concat(base.Battle.DiscardZone)
                                    select card).ToList<Card>();
 
             for (int i = 0; i < Level; i++)
@@ -54,13 +60,23 @@ namespace RNGCardPack.Source.StatusEffects.Effects
                 if (base.Battle.BattleShouldEnd)
                     yield break;
 
-                finalCard = cardList.Sample(base.GameRun.BattleRng);
+                var action = new RollPercentAction(base.Battle.Player, PercentValue1, true);
+
+                yield return action;
+
+                if (action.Args.Result)
+                    finalCard = base.Battle.ExileZone.Sample(base.Battle.GameRun.BattleRng);
+
+                else
+                    finalCard = cardList.Sample(base.GameRun.BattleRng);
 
                 if (finalCard != null)
                 {
                     switch (finalCard.Zone)
                     {
                         case CardZone.Hand:
+                            this.NotifyActivating();
+
                             UiUtils.UpdateHandCardsPannel(finalCard);
 
                             yield return new PlayCardAction(finalCard);
@@ -68,10 +84,14 @@ namespace RNGCardPack.Source.StatusEffects.Effects
 
                         case CardZone.Draw:
                         case CardZone.Discard:
+                            this.NotifyActivating();
+
                             yield return new PlayCardAction(finalCard);
                             break;
 
                         case CardZone.Exile:
+                            this.NotifyActivating();
+
                             Card copyCard = finalCard.CloneBattleCard();
 
                             copyCard.IsPlayTwiceToken = true;

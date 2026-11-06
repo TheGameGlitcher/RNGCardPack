@@ -12,3 +12,4 @@ Special Thanks:
 - NeoShrimp for making Sideloader.
 - Lvalon and Gluee who helped make Astrological Divination's generic cost function save.
 - Radal for drawing all the card art.
+- Cyaneko for help with the reworked mod internals.

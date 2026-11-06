@@ -9,6 +9,7 @@ using LBoL.Core.Cards;
 using LBoL.Core.Randoms;
 using LBoL.EntityLib.StatusEffects.Others;
 using LBoLEntitySideloader.Attributes;
+using RNGCardPack.Source.BattleActions.RandomDrawManyCardAction;
 using RNGCardPack.Source.Cards.Template;
 using RNGCardPack.Source.StatusEffects.Effects;
 using System.Collections.Generic;
@@ -66,9 +67,7 @@ namespace RNGCardPack.Source.Cards.Colors.G
             if (base.Battle.BattleShouldEnd)
                 yield break;
 
-            int result = RNGGenericRange(RandomMinValue1, RandomMaxValue1, true);
-
-            yield return new DrawManyCardAction(result);
+            yield return new RandomDrawManyCardAction(base.Battle.Player, RandomMinValue1, RandomMaxValue1, true, AllowOrderChaos, AllowNegativeValues);
 
             yield break;
         }

@@ -7,6 +7,8 @@ using LBoL.Core.Cards;
 using LBoL.Core.StatusEffects;
 using LBoLEntitySideloader.Attributes;
 using LBoLEntitySideloader.ExtraFunc.GunHelpers;
+using RNGCardPack.Source.BattleActions.RandomRangeAction;
+using RNGCardPack.Source.BattleActions.RollPercentAction;
 using RNGCardPack.Source.Cards.Colors.W;
 using RNGCardPack.Source.Cards.Template;
 using System;
@@ -79,11 +81,17 @@ namespace RNGCardPack.Source.Cards.Colors.W
 
             yield return AttackAction(selector.SelectedEnemy);
 
-            int cardAmount = RNGGenericRange(RandomMinValue1, RandomMaxValue1, true);
+            var action1 = new RollRandomRangeAction(base.Battle.Player, RandomMinValue1, RandomMaxValue1, true, AllowOrderChaos, AllowNegativeValues);
 
-            List<Card> cards = Library.CreateCards<MeteonicDebris>(cardAmount).ToList<Card>();
+            yield return action1;
 
-            if (RNGGenericPercent(PercentValue1, false, false))
+            List<Card> cards = Library.CreateCards<MeteonicDebris>(action1.Args.Result).ToList<Card>();
+
+            var action2 = new RollPercentAction(base.Battle.Player, PercentValue1, false);
+
+            yield return action2;
+
+            if (action2.Args.Result)
                 yield return new AddCardsToDiscardAction(cards);
 
             else

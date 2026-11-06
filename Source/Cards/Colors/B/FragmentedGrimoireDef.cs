@@ -8,6 +8,8 @@ using LBoL.Core.Battle.Interactions;
 using LBoL.Core.Cards;
 using LBoL.Core.Randoms;
 using LBoLEntitySideloader.Attributes;
+using LBoLEntitySideloader.ExtraFunc.GunHelpers;
+using RNGCardPack.Source.BattleActions.RandomDamageAction;
 using RNGCardPack.Source.Cards.Template;
 using RNGCardPack.Source.StatusEffects.Effects;
 using System.Collections.Generic;
@@ -69,11 +71,13 @@ namespace RNGCardPack.Source.Cards.Colors.B
             if (base.Battle.BattleShouldEnd)
                 yield break;
 
-            int lifeLoss = RNGGenericRange(RandomMinValue1, RandomMaxValue1);
+            yield return new RandomDamageAction(base.Battle.Player, base.Battle.Player, RandomMinValue1, RandomMaxValue1, DamageType.HpLose, false, GunNameID.GetGunFromId(862), GunType.Single, true, AllowOrderChaos, AllowNegativeValues); // Sacrifice
 
-            yield return SacrificeAction(lifeLoss);
+            if (IsUpgraded)
+                yield return BuffAction<FragmentedGrimoireSe>(Value2, 0, 1, Value1);
 
-            yield return BuffAction<FragmentedGrimoireSe>(Value2, 0, 0, Value1);
+            else
+                yield return BuffAction<FragmentedGrimoireSe>(Value2, 0, 0, Value1);
 
             yield break;
         }

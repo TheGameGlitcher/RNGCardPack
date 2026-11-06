@@ -10,6 +10,9 @@ using LBoL.Core.Randoms;
 using LBoL.EntityLib.StatusEffects.Others;
 using LBoLEntitySideloader.Attributes;
 using LBoLEntitySideloader.ExtraFunc.GunHelpers;
+using RNGCardPack.Source.BattleActions.RandomCastBlockShieldAction;
+using RNGCardPack.Source.BattleActions.RandomDamageAction;
+using RNGCardPack.Source.BattleActions.RollPercentAction;
 using RNGCardPack.Source.Cards.Template;
 using RNGCardPack.Source.StatusEffects.Effects;
 using System;
@@ -39,6 +42,8 @@ namespace RNGCardPack.Source.Cards.Colors.P
             config.Type = CardType.Skill;
 
             config.TargetType = TargetType.Nobody;
+
+            config.Damage = 0;
 
             config.GunName = GunNameID.GetGunFromId(777010);      // SemiAutomatedDollP
             config.GunNameBurst = GunNameID.GetGunFromId(777011); // SemiAutomatedDollPB
@@ -240,7 +245,11 @@ namespace RNGCardPack.Source.Cards.Colors.P
 
         private IEnumerable<BattleAction> TransformCard(GameEventArgs args)
         {
-            Card card = Library.CreateCard((RNGGenericPercent(PercentValue1, true)) ? PhilosopherColor : GenericColors.Sample(base.BattleRng), IsUpgraded);
+            var action = new RollPercentAction(base.Battle.Player, PercentValue1, true);
+
+            yield return action;
+
+            Card card = Library.CreateCard((action.Args.Result) ? PhilosopherColor : GenericColors.Sample(base.BattleRng), IsUpgraded);
 
             yield return new TransformCardAction(this, card);
 
@@ -249,11 +258,11 @@ namespace RNGCardPack.Source.Cards.Colors.P
 
         private void OnDamageRecieving(DamageEventArgs args)
         {
-            if (base.Battle.HandZone.Contains(this) && args.Cause != ActionCause.OnlyCalculate && base.Battle.AllAliveEnemies.Contains(args.Source))
+            if (base.Battle.HandZone.Contains(this) && args.Cause != ActionCause.OnlyCalculate && args.DamageInfo.DamageType == DamageType.Attack && base.Battle.AllAliveEnemies.Contains(args.Source))
             {
                 this.NotifyActivating();
 
-                React(RNGBlockShieldAction(RandomMinShield, RandomMaxShield, true));
+                React(new RandomCastBlockShieldAction(base.Battle.Player, base.Battle.Player, 0, 0, RandomMinShield, RandomMaxShield));
             }
         }
 
@@ -300,7 +309,11 @@ namespace RNGCardPack.Source.Cards.Colors.P
 
         private IEnumerable<BattleAction> TunEndingActionsW()
         {
-            if (RNGGenericPercent(PercentValueW1, true, true))
+            var action = new RollPercentAction(base.Battle.Player, PercentValueW1, true);
+
+            yield return action;
+
+            if (action.Args.Result)
             {
                 List<Card> cards = (from hand in base.Battle.HandZone
                                     where hand.CanUpgradeAndPositive
@@ -338,7 +351,11 @@ namespace RNGCardPack.Source.Cards.Colors.P
             {
                 Card card = Library.CreateCard(TokenCards.Sample(base.BattleRng));
 
-                if (card.CanUpgradeAndPositive && RNGGenericPercent(PercentValueU1, true, true))
+                var action = new RollPercentAction(base.Battle.Player, PercentValueU1, true);
+
+                yield return action;
+
+                if (card.CanUpgradeAndPositive && action.Args.Result)
                     card.Upgrade();
 
                 cards.Add(card);
@@ -353,7 +370,7 @@ namespace RNGCardPack.Source.Cards.Colors.P
         {
             this.NotifyActivating();
 
-            yield return new DamageAction(base.Battle.Player, base.Battle.RandomAliveEnemy, DamageInfo.HpLose(RNGGenericRange(RandomMinValueB1, RandomMaxValueB1, true)), GunNameID.GetGunFromId(862)); // Sacrifice
+            yield return new RandomDamageAction(base.Battle.Player, base.Battle.RandomAliveEnemy, RandomMinValueB1, RandomMaxValueB1, DamageType.HpLose, false, GunNameID.GetGunFromId(862), GunType.Single, true, AllowOrderChaos, AllowNegativeValues); // Sacrifice
 
             yield break;
         }
@@ -362,7 +379,7 @@ namespace RNGCardPack.Source.Cards.Colors.P
         {
             this.NotifyActivating();
 
-            yield return RNGAttackAction(base.Battle.RandomAliveEnemy, RandomMinDamage, RandomMaxDamage, false, true);
+            yield return new RandomDamageAction(base.Battle.Player, base.Battle.RandomAliveEnemy, RandomMinDamage, RandomMaxDamage, DamageType.Attack, false, GunName, GunType.Single, true, AllowOrderChaos, AllowNegativeValues);
 
             yield break;
         }
@@ -382,7 +399,11 @@ namespace RNGCardPack.Source.Cards.Colors.P
         {
             this.NotifyActivating();
 
-            Card card = Library.CreateCard((RNGGenericPercent(PercentValueC1, true, true)) ? ToolGadgetCardsRare.Sample(base.BattleRng) : ToolGadgetCardsGeneric.Sample(base.BattleRng), false);
+            var action = new RollPercentAction(base.Battle.Player, PercentValueC1, true);
+
+            yield return action;
+
+            Card card = Library.CreateCard((action.Args.Result) ? ToolGadgetCardsRare.Sample(base.BattleRng) : ToolGadgetCardsGeneric.Sample(base.BattleRng), false);
 
             if (IsUpgraded && card.CanUpgradeAndPositive)
                 card.Upgrade();

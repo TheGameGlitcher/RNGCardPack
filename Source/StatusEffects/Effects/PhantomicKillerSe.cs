@@ -11,6 +11,8 @@ using LBoL.EntityLib.StatusEffects.Enemy;
 using LBoL.Presentation;
 using LBoLEntitySideloader.Attributes;
 using LBoLEntitySideloader.ExtraFunc.GunHelpers;
+using RNGCardPack.Source.BattleActions.RandomDamageAction;
+using RNGCardPack.Source.BattleActions.RollPercentAction;
 using RNGCardPack.Source.StatusEffects.Template;
 using System;
 using System.Collections.Generic;
@@ -27,6 +29,10 @@ namespace RNGCardPack.Source.StatusEffects.Effects
             StatusEffectConfig config = GetDefaultStatusEffectConfig();
 
             config.LevelStackType = StackType.Keep;
+
+            config.ShowPlusByLimit = true;
+
+            config.LimitStackType = StackType.Max;
 
             config.HasCount = true;
 
@@ -49,7 +55,6 @@ namespace RNGCardPack.Source.StatusEffects.Effects
             GunNameBurst = GunNameID.GetGunFromId(4035);
 
             PercentValue1 = 50;
-
             PercentValue2 = 75;
         }
 
@@ -57,7 +62,7 @@ namespace RNGCardPack.Source.StatusEffects.Effects
         {
             get
             {
-                return (IsUpgraded) ? PercentValue2 : PercentValue1;
+                return (Limit > 0) ? PercentValue2 : PercentValue1;
             }
         }
 
@@ -69,19 +74,17 @@ namespace RNGCardPack.Source.StatusEffects.Effects
             base.ReactOwnerEvent<CardUsingEventArgs>(base.Battle.CardUsed, new EventSequencedReactor<CardUsingEventArgs>(this.OnCardUsed));
             base.ReactOwnerEvent<StatusEffectApplyEventArgs>(base.Owner.StatusEffectAdded, new EventSequencedReactor<StatusEffectApplyEventArgs>(this.OnStatusEffectAdded));
 
-            BaseRandomMinDamage = Count;
-            BaseRandomMaxDamage = Level;
+            RandomMinDamage = Count;
+            RandomMaxDamage = Level;
 
-            IsUpgraded = BaseRandomMinDamage == 8;
-
-            Count = (int)RandomMinDamage.Damage + base.Battle.Player.TotalFirepower;
-            Level = (int)RandomMaxDamage.Damage + base.Battle.Player.TotalFirepower;
+            Count = Math.Max(DamageRange.MinDamage + base.Battle.Player.TotalFirepower, 0);
+            Level = Math.Max(DamageRange.MaxDamage + base.Battle.Player.TotalFirepower, 0);
         }
 
         private IEnumerable<BattleAction> OnStatusEffectAdded(StatusEffectApplyEventArgs args)
         {
-            Count = (int)RandomMinDamage.Damage + base.Battle.Player.TotalFirepower;
-            Level = (int)RandomMaxDamage.Damage + base.Battle.Player.TotalFirepower;
+            Count = Math.Max(DamageRange.MinDamage + base.Battle.Player.TotalFirepower, 0);
+            Level = Math.Max(DamageRange.MaxDamage + base.Battle.Player.TotalFirepower, 0);
 
             yield break;
         }
@@ -91,8 +94,16 @@ namespace RNGCardPack.Source.StatusEffects.Effects
             if (base.Battle.BattleShouldEnd)
                 yield break;
 
-            if (RNGGenericPercentSe(PercentValue, true))
-                yield return RNGAttackActionSe(base.Battle.RandomAliveEnemy, RandomMinDamage, RandomMaxDamage, false, true);
+            var action = new RollPercentAction(this.Owner, PercentValue, true);
+
+            yield return action;
+
+            if (action.Args.Result)
+            {
+                this.NotifyActivating();
+
+                yield return new RandomDamageAction(this.Owner, base.Battle.RandomAliveEnemy, RandomMinDamage, RandomMaxDamage, DamageType.Attack, false, GunName, GunType.Single, true, AllowOrderChaos, AllowNegativeValues);
+            }
 
             yield break;
         }

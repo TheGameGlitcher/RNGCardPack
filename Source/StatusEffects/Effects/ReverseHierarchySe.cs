@@ -8,6 +8,7 @@ using LBoL.Core.Randoms;
 using LBoL.Core.StatusEffects;
 using LBoL.Core.Units;
 using LBoLEntitySideloader.Attributes;
+using RNGCardPack.Source.BattleActions.RollPercentAction;
 using RNGCardPack.Source.StatusEffects.Template;
 using System;
 using System.Collections.Generic;
@@ -39,11 +40,6 @@ namespace RNGCardPack.Source.StatusEffects.Effects
     [EntityLogic(typeof(ReverseHierarchySeDef))]
     public sealed class ReverseHierarchySe : RNGCardPackStatusEffect
     {
-        public ReverseHierarchySe() : base()
-        {
-            PercentValue1 = 25;
-        }
-
         protected override void OnAdded(Unit unit)
        {
             React(PerformAction.Effect(base.Battle.Player, "BuffRed"));
@@ -68,7 +64,8 @@ namespace RNGCardPack.Source.StatusEffects.Effects
             {
                 yield return new RemoveCardAction(args.Card);
 
-                yield return AddRandomCards();
+                foreach (BattleAction action in AddRandomCards())
+                    yield return action;
             }
 
             yield break;
@@ -83,7 +80,8 @@ namespace RNGCardPack.Source.StatusEffects.Effects
             {
                 yield return new RemoveCardAction(card);
 
-                yield return AddRandomCards();
+                foreach (BattleAction action in AddRandomCards())
+                    yield return action;
             }
 
             yield break;
@@ -101,13 +99,17 @@ namespace RNGCardPack.Source.StatusEffects.Effects
             return;
         }
 
-        private BattleAction AddRandomCards()
+        private IEnumerable<BattleAction> AddRandomCards()
         {
             Card[] cards = base.Battle.RollCardsWithoutManaLimit(new CardWeightTable(RarityWeightTable.BattleCard, OwnerWeightTable.AllOnes, CardTypeWeightTable.CanBeLoot, false), Level);
 
             foreach (Card card in cards)
             {
-                if (RNGGenericPercentSe(PercentValue1, true))
+                var action = new RollPercentAction(base.Battle.Player, this.Count, true);
+
+                yield return action;
+
+                if (action.Args.Result)
                     card.Upgrade();
 
                 card.SetBaseCost(ManaGroup.Anys(card.ConfigCost.Amount));
@@ -115,7 +117,9 @@ namespace RNGCardPack.Source.StatusEffects.Effects
 
             NotifyActivating();
 
-            return new AddCardsToHandAction(cards);
+            yield return new AddCardsToHandAction(cards);
+
+            yield break;
         }
     }
 }

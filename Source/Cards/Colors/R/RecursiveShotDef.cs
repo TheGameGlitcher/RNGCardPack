@@ -7,6 +7,8 @@ using LBoL.Core.Cards;
 using LBoL.Core.StatusEffects;
 using LBoL.Core.Units;
 using LBoLEntitySideloader.Attributes;
+using RNGCardPack.Source.BattleActions.RandomDamageAction;
+using RNGCardPack.Source.BattleActions.RollPercentAction;
 using RNGCardPack.Source.Cards.Template;
 using System;
 using System.Collections.Generic;
@@ -113,9 +115,13 @@ namespace RNGCardPack.Source.Cards.Colors.R
                 yield break;
             }
 
-            yield return RNGAttackAction(base.Battle.RandomAliveEnemy, RandomMinDamage, RandomMaxDamage, false, true);
+            yield return new RandomDamageAction(base.Battle.Player, base.Battle.RandomAliveEnemy, RandomMinDamage, RandomMaxDamage, DamageType.Attack, false, GunName, GunType.Single, true, AllowOrderChaos, AllowNegativeValues);
 
-            if (RNGGenericPercent(PercentValue1, true))
+            var action = new RollPercentAction(base.Battle.Player, PercentValue1);
+
+            yield return action;
+
+            if (action.Args.Result)
                 yield return BuffAction<TempFirepower>(Value1);
 
             Counter--;
@@ -125,7 +131,11 @@ namespace RNGCardPack.Source.Cards.Colors.R
 
             else
             {
-                if (RNGGenericPercent(BasePercentValue2, true))
+                var action2 = new RollPercentAction(base.Battle.Player, PercentValue2);
+
+                yield return action2;
+
+                if (action2.Args.Result)
                     yield return new MoveCardToDrawZoneAction(this, DrawZoneTarget.Random);
 
                 else

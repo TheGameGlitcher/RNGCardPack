@@ -3,6 +3,7 @@ using LBoL.ConfigData;
 using LBoL.Core;
 using LBoL.Core.Battle;
 using LBoLEntitySideloader.Attributes;
+using RNGCardPack.Source.BattleActions.RandomCastBlockShieldAction;
 using RNGCardPack.Source.Cards.Template;
 using System.Collections.Generic;
 
@@ -60,7 +61,7 @@ namespace RNGCardPack.Source.Cards.Developer
         protected override IEnumerable<BattleAction> Actions(UnitSelector selector, ManaGroup consumingMana, Interaction precondition)
         {
 
-            yield return RNGBlockShieldAction(RandomMinShield, RandomMaxShield, true);
+            yield return new RandomCastBlockShieldAction(base.Battle.Player, base.Battle.Player, 0, 0, RandomMinShield, RandomMaxShield, true, AllowOrderChaos, AllowNegativeValues);
         }
     }
 }

@@ -38,8 +38,6 @@ namespace RNGCardPack.Source.StatusEffects.Effects
     [EntityLogic(typeof(HonorDefianceAvoidanceSeDef))]
     public sealed class HonorDefianceAvoidanceSe : RNGCardPackStatusEffect
     {
-        public List<Card> StoredCards { get; private set; } = new List<Card>();
-
         protected override void OnAdded(Unit unit)
         {
             if (!(unit is PlayerUnit))

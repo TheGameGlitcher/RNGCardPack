@@ -54,6 +54,12 @@ namespace RNGCardPack.Source.Cards.Colors.G
     [EntityLogic(typeof(WhiteRabbitLuckDef))]
     public sealed class WhiteRabbitLuck : RNGCardPackCard
     {
+        public WhiteRabbitLuck() : base()
+        {
+            BasePercentValue1 = 20;
+            BaseUpgradedPercentValue1 = 20;
+        }
+
         protected override IEnumerable<BattleAction> Actions(UnitSelector selector, ManaGroup consumingMana, Interaction precondition)
         {
             if (base.Battle.BattleShouldEnd)

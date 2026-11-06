@@ -9,9 +9,11 @@ using LBoL.Core.Cards;
 using LBoL.EntityLib.Cards.Character.Cirno;
 using LBoLEntitySideloader.Attributes;
 using LBoLEntitySideloader.ExtraFunc.GunHelpers;
+using RNGCardPack.Source.BattleActions.RandomDamageAction;
 using RNGCardPack.Source.Cards.Template;
 using RNGCardPack.Source.StatusEffects.Effects;
 using System.Collections.Generic;
+using System.Linq;
 using static Spine.Unity.SpineAttachment;
 
 namespace RNGCardPack.Source.Cards.Colors.UR
@@ -34,6 +36,8 @@ namespace RNGCardPack.Source.Cards.Colors.UR
             config.Cost = new ManaGroup() { Blue = 1, Red = 1, Any = 1 };
 
             config.Rarity = Rarity.Rare;
+
+            config.Damage = 0;
 
             config.Loyalty = 2;
             config.UpgradedLoyalty = 4;
@@ -108,7 +112,7 @@ namespace RNGCardPack.Source.Cards.Colors.UR
             {
                 yield return PerformAction.Sfx("FairySupport", 0f);
 
-                yield return RNGAttackAction(base.Battle.AllAliveEnemies, RandomMinDamage, RandomMaxDamage, true);
+                yield return new RandomDamageAction(base.Battle.Player, base.Battle.AllAliveEnemies.ToArray(), RandomMinDamage, RandomMaxDamage, DamageType.Attack, false, GunName, GunType.Single, true, AllowOrderChaos, AllowNegativeValues);
             }
 
             if (IsUpgraded)

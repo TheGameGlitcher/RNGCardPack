@@ -7,6 +7,7 @@ using LBoL.Core.Cards;
 using LBoL.EntityLib.StatusEffects.Basic;
 using LBoLEntitySideloader.Attributes;
 using LBoLEntitySideloader.ExtraFunc.GunHelpers;
+using RNGCardPack.Source.BattleActions.RandomRangeAction;
 using RNGCardPack.Source.Cards.Template;
 using RNGCardPack.Source.StatusEffects.Effects;
 using System;
@@ -92,10 +93,20 @@ namespace RNGCardPack.Source.Cards.Colors.WR
 
                 foreach (RNGCardPackCard card in cards.Cast<RNGCardPackCard>())
                 {
-                    reflection += RNGGenericRange(card.RandomMinValue1, card.RandomMaxValue1, true);
+                    var action1 = new RollRandomRangeAction(base.Battle.Player, card.RandomMinValue1, card.RandomMaxValue1);
+
+                    yield return action1;
+
+                    reflection += action1.Args.Result;
 
                     if (card.IsUpgraded)
-                        barrier += RNGGenericRange(card.RandomMinShield.Shield, card.RandomMaxShield.Shield, true);
+                    {
+                        var action2 = new RollRandomRangeAction(base.Battle.Player, card.RandomMinShield, card.RandomMaxShield);
+
+                        yield return action2;
+
+                        barrier += action2.Args.Result;
+                    }
                 }
 
                 yield return BuffAction<Reflect>(reflection);

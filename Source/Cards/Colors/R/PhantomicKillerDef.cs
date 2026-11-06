@@ -73,7 +73,11 @@ namespace RNGCardPack.Source.Cards.Colors.R
 
             yield return BuffAction<ChaosSe>(Value1);
 
-            yield return BuffAction<PhantomicKillerSe>(RandomMaxValue1 - ChaosLevel, 0, 0, RandomMinValue1 + ChaosLevel);
+            if (IsUpgraded)
+                yield return BuffAction<PhantomicKillerSe>(RandomMaxValue1, 0, 1, RandomMinValue1);
+
+            else
+                yield return BuffAction<PhantomicKillerSe>(RandomMaxValue1, 0, 0, RandomMinValue1);
 
             yield break;
         }

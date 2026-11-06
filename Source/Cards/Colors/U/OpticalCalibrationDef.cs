@@ -9,6 +9,7 @@ using LBoL.Core.Cards;
 using LBoL.Core.StatusEffects;
 using LBoLEntitySideloader.Attributes;
 using LBoLEntitySideloader.ExtraFunc.GunHelpers;
+using RNGCardPack.Source.BattleActions.RollPercentAction;
 using RNGCardPack.Source.Cards.Template;
 using RNGCardPack.Source.StatusEffects.Effects;
 using System.Collections.Generic;
@@ -57,7 +58,6 @@ namespace RNGCardPack.Source.Cards.Colors.U
         public OpticalCalibration() : base()
         {
             IsRandom = true;
-            AllowOrderChaos = true;
 
             BasePercentValue1 = 10;
             BaseUpgradedPercentValue1 = 15;
@@ -70,7 +70,11 @@ namespace RNGCardPack.Source.Cards.Colors.U
 
             yield return AttackAction(selector.SelectedEnemy);
 
-            if (RNGGenericPercent(PercentValue1, true))
+            var action = new RollPercentAction(base.Battle.Player, PercentValue1, true);
+
+            yield return action;
+
+            if (action.Args.Result)
                 yield return BuffAction<GuangxueMicai>(0, Value1);
 
             yield break;
